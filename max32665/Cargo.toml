@@ -1,0 +1,25 @@
+[package]
+edition = "2018"
+name = "max32665"
+version = "0.0.0"
+authors = ["Astro <astro@spaceboyz.net>"]
+description = "Peripheral Access Crate for the Maxim-Integrated MAX32665"
+keywords = ["cortex-m", "svd2rust", "no_std", "embedded"]
+categories = ["embedded", "no-std"]
+license = "MIT/Apache-2.0"
+
+[dependencies]
+bare-metal = "0.2.4"
+vcell = "0.1.0"
+cortex-m = ">=0.5.8,<0.7"
+
+[dependencies.cortex-m-rt]
+optional = true
+version = "0.6.8"
+
+[package.metadata.docs.rs]
+features = ['rt']
+
+[features]
+default = []
+rt = ["cortex-m-rt/device"]
