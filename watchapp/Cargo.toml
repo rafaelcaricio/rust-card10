@@ -1,0 +1,16 @@
+[package]
+edition = "2018"
+name = "watchapp"
+version = "0.0.0"
+authors = ["Astro <astro@spaceboyz.net>"]
+
+[dependencies]
+card10 = { path = "../card10" }
+panic-abort = "0.3.1"
+
+[profile.release]
+codegen-units = 1
+incremental = false
+debug = true
+opt-level = "s"
+lto = true

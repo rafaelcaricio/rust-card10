@@ -1,0 +1,9 @@
+[package]
+edition = "2018"
+name = "card10"
+version = "0.0.0"
+authors = ["Astro <astro@spaceboyz.net>"]
+
+[dependencies]
+max32665 = { path = "../max32665", features = ["rt"] }
+cortex-m-rt = { version = "0.6", features = ["device"] }

@@ -14,12 +14,12 @@ let
     name = "rust-card10";
     version = "0.0.0";
     src = ./.;
-    cargoSha256 = "0wnv4bv34d30dxkx82z3fll7n28q3dkwygyfl07ajj3bh40r2xwf";
+    cargoSha256 = "1jwg5x14g9m100yq7m21klmxgmd2gcsggpmcnxwa8vavmkf9gmrn";
     preBuild = "export CARGO_HOME=$(mktemp -d cargo-home.XXX)";
     doCheck = false;
     installPhase = ''
       mkdir -p $out/lib
-      #cp target/thumbv7em-none-eabihf/release/adc2tcp $out/lib/
+      cp target/thumbv7em-none-eabihf/release/watchapp $out/lib/
     '';
   };
 in {
