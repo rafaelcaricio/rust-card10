@@ -1,15 +1,11 @@
-let
-  mozillaOverlay = import (builtins.fetchTarball https://github.com/mozilla/nixpkgs-mozilla/archive/master.tar.gz);
-  pkgs = import <nixpkgs> { overlays = [ mozillaOverlay ]; };
-in
+{ pkgs ? import <nixpkgs> {} }:
+
 with pkgs;
-let
-  openocd = callPackage ./openocd.nix {};
-  rust = rustChannelOfTargets "nightly" null [ "thumbv7em-none-eabihf" ];
-in
+with import ./default.nix;
+
 stdenv.mkDerivation {
   name = "env";
-  buildInputs = with rustPlatform.rust; [
+  buildInputs = [
     gdb
     rust
   ];
