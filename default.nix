@@ -14,7 +14,8 @@ let
     name = "rust-card10";
     version = "0.0.0";
     src = ./.;
-    cargoSha256 = "1jwg5x14g9m100yq7m21klmxgmd2gcsggpmcnxwa8vavmkf9gmrn";
+    cargoSha256 = "04blshy2c4xms9v8ik921qs3ym4vq8rsx8pw78brw7r88x6lx01a";
+    buildInputs = [ pkgsCross.armhf-embedded.stdenv.cc ];
     preBuild = "export CARGO_HOME=$(mktemp -d cargo-home.XXX)";
     doCheck = false;
     installPhase = ''
