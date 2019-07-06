@@ -8,6 +8,7 @@ stdenv.mkDerivation {
   buildInputs = [
     gdb
     rust
+    pkgsCross.armhf-embedded.stdenv.cc
   ];
 
   # Set Environment Variables
