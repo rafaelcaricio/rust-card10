@@ -16,16 +16,25 @@ let
       ];
       enableParallelBuilding = true;
     });
+  card10-scripts = stdenv.mkDerivation {
+    name = "card10-scripts";
+    src = ./c/openocd/scripts;
+    dontBuild = true;
+    installPhase = ''
+      mkdir -p $out/share/openocd
+      cp -ar . $out/share/openocd/scripts
+   '';
+  };
 in
   stdenv.mkDerivation {
     name = "openocd-card10";
     src = maxim-openocd;
     phases = [ "unpackPhase" "installPhase" ];
-    buildInputs = [ maxim-openocd makeWrapper ];
+    buildInputs = [ makeWrapper maxim-openocd card10-scripts ];
     installPhase = ''
       mkdir -p $out/bin
       makeWrapper ${maxim-openocd}/bin/openocd $out/bin/openocd-card10 \
-        --add-flags "-f ${maxim-openocd}/share/openocd/scripts/interface/cmsis-dap.cfg" \
-        --add-flags "-f ${maxim-openocd}/share/openocd/scripts/target/max32665.cfg"
+        --add-flags "-f ${card10-scripts}/share/openocd/scripts/interface/cmsis-dap.cfg" \
+        --add-flags "-f ${card10-scripts}/share/openocd/scripts/target/max32665.cfg"
     '';
   }

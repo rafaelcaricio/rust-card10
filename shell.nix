@@ -21,6 +21,6 @@ stdenv.mkDerivation {
     # Let openocd output scroll by
     sleep 1
 
-    echo "Run 'cargo run --release'"
+    echo "Run 'cargo run --release watchapp'"
   '';
 }
