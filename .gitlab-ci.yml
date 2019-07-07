@@ -2,6 +2,6 @@ nix:
     stage: build
     image: nixos/nix:latest
     variables:
-      GIT_STRATEGY: fetch
+      GIT_SUBMODULE_STRATEGY: normal
     script:
         - nix-build
