@@ -1,5 +1,7 @@
 nix:
     stage: build
     image: nixos/nix:latest
+    variables:
+      GIT_STRATEGY: fetch
     script:
         - nix-build
