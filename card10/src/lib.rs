@@ -4,6 +4,8 @@ pub use max32665;
 pub use cortex_m_rt as _;
 pub use cortex_m_rt::entry;
 
+pub mod lcd;
+
 #[link(name = "card10")]
 extern {
     fn card10_init();
