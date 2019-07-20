@@ -4,3 +4,12 @@ MEMORY {
     RAM (rwx)  : ORIGIN = 0x20000000, LENGTH = 512k
     SPID (r)   : ORIGIN = 0x80000000, LENGTH = 512M
 }
+
+SECTIONS
+{
+  /DISCARD/ :
+  {
+    /* cortex-m-rt's link.x drops only `.ARM.exidx.*` */
+    *(.ARM.exidx);
+  }
+}
