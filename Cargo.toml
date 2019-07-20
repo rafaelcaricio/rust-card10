@@ -11,3 +11,4 @@ incremental = false
 debug = true
 opt-level = "s"
 lto = true
+panic = "abort"
