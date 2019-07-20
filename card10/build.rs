@@ -41,6 +41,7 @@ fn main() {
         .include("../c/lib/vendor/Maxim/MAX77650")
         .include("../c/lib/sdk/Libraries/Boards/Include")
         .file("../c/lib/card10/card10.c")
+        .file("../c/lib/card10/pb.c")
         .file("../c/lib/card10/pmic.c")
         .file("../c/lib/card10/portexpander.c")
         .file("../c/lib/card10/leds.c")
