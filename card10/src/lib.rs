@@ -5,6 +5,7 @@ pub use cortex_m_rt as _;
 pub use cortex_m_rt::entry;
 
 pub mod lcd;
+pub mod leds;
 
 #[link(name = "card10")]
 extern {
