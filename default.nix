@@ -31,5 +31,5 @@ let
     '';
   };
 in {
-  inherit openocd rust rustPlatform firmware;
+  inherit openocd rust rustPlatform py-crc16 firmware;
 }

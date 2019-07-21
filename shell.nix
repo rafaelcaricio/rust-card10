@@ -9,6 +9,7 @@ stdenv.mkDerivation {
     gdb
     rust
     pkgsCross.armhf-embedded.stdenv.cc
+    py-crc16
   ];
 
   # Set Environment Variables
@@ -21,6 +22,7 @@ stdenv.mkDerivation {
     # Let openocd output scroll by
     sleep 1
 
-    echo "Run 'cargo run --release watchapp'"
+    export PATH=`pwd`/.bin:$PATH
+    echo "Run 'cargo card10 watchapp'"
   '';
 }
