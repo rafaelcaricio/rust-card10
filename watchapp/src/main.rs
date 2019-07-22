@@ -2,13 +2,13 @@
 #![no_main]
 
 use panic_abort as _;
-use card10::{entry, lcd, leds};
+use card10::{entry, lcd, leds::Leds};
 
 
 #[entry]
 fn main() -> ! {
     card10::init();
-    leds::init();
+    let leds = Leds::new();
 
     lcd::set_backlight(1000);
     let mut t = 0;
@@ -24,10 +24,10 @@ fn main() -> ! {
         }
         lcd::update();
 
-        for led in 0..leds::LEDS {
-            leds::set(led, ((t << 2) & 0xFF) as u8, ((t << 1) & 0xFF) as u8, ((t >> 2) & 0xFF) as u8);
+        for led in leds.iter() {
+            led.set(((t << 2) & 0xFF) as u8, ((t << 1) & 0xFF) as u8, ((t >> 2) & 0xFF) as u8);
         }
-        leds::update();
+        leds.update();
 
         t += 1;
     }
