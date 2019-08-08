@@ -46,7 +46,7 @@ fn main() {
         .file("../c/lib/card10/portexpander.c")
         .file("../c/lib/card10/leds.c")
         .file("../c/lib/card10/bosch.c")
-        .file("../c/lib/gfx/display.c")
+        .file("../c/lib/card10/display.c")
         .file("../c/lib/gfx/LCD/LCD_Driver.c")
         .file("../c/lib/gfx/GUI_DEV/DEV_Config.c")
         .file("../c/lib/gfx/GUI_DEV/GUI_Paint.c")
