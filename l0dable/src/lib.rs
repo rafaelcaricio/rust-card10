@@ -1,6 +1,8 @@
 #![no_std]
 #![feature(global_asm)]
 
+use panic_abort as _;
+
 global_asm!(include_str!("crt.s"));
 
 /// Type check the user-supplied entry function.

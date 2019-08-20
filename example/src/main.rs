@@ -2,7 +2,6 @@
 #![no_main]
 
 use core::fmt::Write;
-use panic_abort as _;
 use l0dable::*;
 
 main!(main);

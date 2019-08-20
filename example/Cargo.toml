@@ -6,7 +6,6 @@ authors = ["Astro <astro@spaceboyz.net>"]
 
 [dependencies]
 l0dable = { path = "../l0dable" }
-panic-abort = "0.3"
 
 [build-dependencies]
 cc = "1.0"
