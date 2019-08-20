@@ -78,6 +78,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "l0dable"
+version = "0.0.0"
+dependencies = [
+ "cc 1.0.37 (registry+https://github.com/rust-lang/crates.io-index)",
+ "r0 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "l0dable-example"
+version = "0.0.0"
+dependencies = [
+ "cc 1.0.37 (registry+https://github.com/rust-lang/crates.io-index)",
+ "l0dable 0.0.0",
+ "panic-abort 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "max32665"
 version = "0.0.0"
 dependencies = [

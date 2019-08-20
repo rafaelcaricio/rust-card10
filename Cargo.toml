@@ -2,7 +2,9 @@
 members = [
   "max32665",
   "card10",
+  "l0dable",
   "watchapp",
+  "example",
 ]
 
 [profile.release]
