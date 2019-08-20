@@ -6,6 +6,7 @@ use std::path::PathBuf;
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
 
+    // Linker script
     let out = &PathBuf::from(env::var_os("OUT_DIR").unwrap());
     File::create(out.join("l0dable.ld"))
         .unwrap()
@@ -14,6 +15,7 @@ fn main() {
     println!("cargo:rustc-link-search={}", out.display());
     println!("cargo:rerun-if-changed=l0dable.ld");
 
+    // Link against C code
     cc::Build::new()
         .target("thumbv7em-none-eabihf")
         .compiler("arm-none-eabihf-gcc")
@@ -29,6 +31,30 @@ fn main() {
         .include("../c/lib/sdk/Libraries/CMSIS/Device/Maxim/MAX32665/Include")
         .include("../c/lib/sdk/Libraries/CMSIS/Include")
         .include("../c/lib/sdk/Libraries/MAX32665PeriphDriver/Include")
+        .file("../c/lib/sdk/Libraries/MAX32665PeriphDriver/Source/sema.c")
+        .file("../c/lib/sdk/Libraries/MAX32665PeriphDriver/Source/mxc_assert.c")
         .file("../c/l0dables/lib/hardware.c")
+        .file("../c/epicardium/api/caller.c")
+        .file("src/client.c")
         .compile("card10");
+
+    // Generate bindings to C code
+    let bindings = bindgen::Builder::default()
+        .clang_args(&[
+            "-Isrc",
+            "-I../c/epicardium",
+            "-I../c/lib/sdk/Libraries/CMSIS/Device/Maxim/MAX32665/Include",
+            "-I../c/lib/sdk/Libraries/CMSIS/Include",
+            "-I../c/lib/sdk/Libraries/MAX32665PeriphDriver/Include",
+        ])
+        .header("src/bindings.h")
+        .use_core()
+        .ctypes_prefix("super::ctypes")
+        .generate()
+        .expect("Unable to generate bindings");
+
+    let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
+    bindings
+        .write_to_file(out_path.join("bindings.rs"))
+        .expect("Couldn't write bindings!");
 }

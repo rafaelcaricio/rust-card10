@@ -2,7 +2,7 @@
 runner = "gdb -q -x openocd.gdb"
 rustflags = [
   "-C", "linker=arm-none-eabihf-gcc",
-  "-C", "link-args=-Tl0dable.ld -pie -fPIC",
+  "-C", "link-args=-Tl0dable.ld -n -pie -fPIC",
   "-C", "relocation-model=pic",
 ]
 

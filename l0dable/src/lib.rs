@@ -5,12 +5,12 @@ global_asm!(include_str!("crt.s"));
 
 /// Type check the user-supplied entry function.
 #[macro_export]
-macro_rules! entry {
+macro_rules! main {
     ($path:path) => {
         #[export_name = "main"]
-        pub unsafe fn __main() -> ! {
+        pub unsafe fn __main() {
             // type check the given path
-            let f: fn() -> ! = $path;
+            let f: fn() = $path;
 
             f()
         }
@@ -32,8 +32,44 @@ pub unsafe extern "C" fn Reset_Handler() -> ! {
     SystemInit();
 
     extern "Rust" {
-        fn main() -> !;
+        fn main();
     }
 
     main();
+    exit(0);
+}
+
+pub mod ctypes {
+    #![allow(non_camel_case_types)]
+
+    pub type c_int = i32;
+    pub type c_uint = u32;
+    pub type c_long = i32;
+    pub type c_ulong = u32;
+    pub type c_longlong = i64;
+    pub type c_ulonglong = u64;
+    pub type c_char = u8;
+    pub use core::ffi::c_void;
+}
+
+pub mod bindings {
+    #![allow(non_upper_case_globals)]
+    #![allow(non_camel_case_types)]
+    #![allow(non_snake_case)]
+
+    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
+}
+use bindings::*;
+
+mod display;
+pub use display::Display;
+
+pub mod uart;
+pub const UART: uart::Uart = uart::Uart;
+
+pub fn exit(ret: i32) -> ! {
+    unsafe {
+        epic_exit(ret);
+    }
+    unreachable!()
 }

@@ -16,6 +16,8 @@ stdenv.mkDerivation {
   RUST_BACKTRACE = 1;
 
   shellHook = ''
+    export LIBCLANG_PATH=${llvmPackages.libclang}/lib
+
     echo "Starting openocd…"
     ${openocd}/bin/openocd-card10 &
 

@@ -38,9 +38,6 @@ SECTIONS {
         KEEP(*(.text.isr_vector))
         *(.text*)
         *(.rodata*)
-
-        KEEP(*(.init))
-        KEEP(*(.fini))
     } :text
 
     .data :
@@ -75,5 +72,8 @@ SECTIONS {
         *(.interp)
         /* Dynamic linking section - nuke, we're not a .so and nothing is going to link against us. */
         *(.dynamic)
+
+        *(.debug*)
+        *(.init .fini .ARM.exidx.text.*)
     }
 }
