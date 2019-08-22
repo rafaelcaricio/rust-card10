@@ -5,7 +5,7 @@ in
 with pkgs;
 let
   openocd = callPackage ./openocd.nix {};
-  rust = rustChannelOfTargets "nightly" null [ "thumbv7em-none-eabihf" ];
+  rust = rustChannelOfTargets "nightly" null [ "thumbv7em-none-eabi" ];
   rustPlatform = makeRustPlatform {
     rustc = rust;
     cargo = rust;
@@ -27,7 +27,7 @@ let
     version = "0.0.0";
     src = ./.;
     cargoSha256 = "10qv30p3kr570glnyn37b6r8pgx48zj0mr9qf84m4wk4sjp3wxsd";
-    buildInputs = [ pkgsCross.armhf-embedded.stdenv.cc glibc_multi ];
+    buildInputs = [ pkgsCross.arm-embedded.stdenv.cc glibc_multi ];
     prePatch = ''
       cp ${epic-stubs}/client.c l0dable/src/
     '';
@@ -40,7 +40,7 @@ let
     doCheck = false;
     installPhase = ''
       mkdir -p $out/lib
-      cp target/thumbv7em-none-eabihf/release/example $out/lib/example.elf
+      cp target/thumbv7em-none-eabi/release/example $out/lib/example.elf
     '';
   };
 in {

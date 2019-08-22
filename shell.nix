@@ -8,7 +8,7 @@ multiStdenv.mkDerivation {
   buildInputs = [
     gdb
     rust
-    pkgsCross.armhf-embedded.stdenv.cc
+    pkgsCross.arm-embedded.stdenv.cc
     openocd
   ];
 
