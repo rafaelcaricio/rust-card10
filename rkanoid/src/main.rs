@@ -6,8 +6,8 @@ use l0dable::*;
 
 pub const BALL_RADIUS: u16 = 4;
 pub const PADDLE_SPACE: u16 = 32;
-pub const BLOCK_W: u16 = 14;
-pub const BLOCK_H: u16 = 8;
+pub const BLOCK_W: u16 = 16;
+pub const BLOCK_H: u16 = 10;
 pub const BLOCKS_X: u16 = Display::W / BLOCK_W;
 pub const BLOCKS_Y: u16 = (Display::H - PADDLE_SPACE) / BLOCK_H;
 
@@ -20,14 +20,14 @@ impl Blocks {
         Blocks { blocks: [[None; BLOCKS_X as usize]; BLOCKS_Y as usize], }
     }
 
-    pub fn generate() -> Self {
+    pub fn generate(rand_max: u8) -> Self {
         let mut result = Self::new();
         let mut count = 0;
         for line in result.blocks.iter_mut() {
             for block in line.iter_mut() {
                 let mut buf = [0, 0, 0, 0];
                 trng::read(&mut buf);
-                if buf[0] > 0xBF {
+                if buf[0] <= rand_max {
                     *block = Some(Color::rgb8(
                        0x80 | buf[1],
                        0x80 | buf[2],
@@ -76,12 +76,6 @@ enum Direction {
     UL,
 }
 
-#[derive(Clone, Copy, Debug)]
-enum Bounce {
-    Vertical,
-    Horizontal,
-}
-
 impl Direction {
     fn motion(&self, x: &mut u16, y: &mut u16) {
         use Direction::*;
@@ -119,6 +113,48 @@ impl Direction {
             (DL, Horizontal) => *self = UL,
         }
     }
+
+    fn is_up(&self) -> bool {
+        use Direction::*;
+        match self {
+            UR => true,
+            UL => true,
+            _ => false,
+        }
+    }
+
+    fn is_down(&self) -> bool {
+        use Direction::*;
+        match self {
+            DR => true,
+            DL => true,
+            _ => false,
+        }
+    }
+
+    fn is_left(&self) -> bool {
+        use Direction::*;
+        match self {
+            UL => true,
+            DL => true,
+            _ => false,
+        }
+    }
+
+    fn is_right(&self) -> bool {
+        use Direction::*;
+        match self {
+            UR => true,
+            DR => true,
+            _ => false,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+enum Bounce {
+    Vertical,
+    Horizontal,
 }
 
 enum GameResult {
@@ -126,18 +162,19 @@ enum GameResult {
     LevelFinish(u32),
 }
 
-fn game(mut score: u32) -> GameResult {
+fn game(level: u16, mut score: u32) -> GameResult {
     let start_time = time();
     let display = Display::open();
 
     let mut paddle = Display::W / 2;
-    let paddle_size = 18;
+    let paddle_size = 18 - (2 * level).min(14);
     let mut ball_x = paddle;
     let mut ball_y = Display::H - PADDLE_HEIGHT - BALL_RADIUS;
     let mut ball_direction = Direction::UR;
-    let mut blocks = Blocks::generate();
+    let mut blocks = Blocks::generate((0x3F + 0x10 * level).min(0xff) as u8);
     for tick in 0.. {
         let input = Buttons::read();
+        let old_paddle = paddle;
         if input.left_bottom() {
             paddle -= PADDLE_SPEED;
             paddle = paddle.max(paddle_size);
@@ -146,32 +183,43 @@ fn game(mut score: u32) -> GameResult {
             paddle += PADDLE_SPEED;
             paddle = paddle.min(Display::W - paddle_size)
         }
+        let paddle_moving = paddle != old_paddle;
         if input.left_top() {
             exit(0);
         }
         let mut check_finish = false;
-        let speed_steps = 1 + (time() - start_time) / 10;
+        let speed_steps = 2 + (time() - start_time) / 15;
         let speed_steps = (speed_steps >> 1) +
             (speed_steps & tick & 1);
         for _ in 0..speed_steps {
             ball_direction.motion(&mut ball_x, &mut ball_y);
 
-            if ball_x <= BALL_RADIUS || ball_x >= Display::W - BALL_RADIUS {
-                // Bounce on left/right border
-                ball_direction.bounce(Bounce::Vertical);
-                vibra::vibrate(10);
+            if (ball_direction.is_left() && ball_x <= BALL_RADIUS) ||
+                (ball_direction.is_right() && ball_x >= Display::W - BALL_RADIUS) {
+                    // Bounce on left/right border
+                    ball_direction.bounce(Bounce::Vertical);
+                    vibra::vibrate(10);
             }
-            if ball_y <= BALL_RADIUS {
+            if ball_direction.is_up() && ball_y <= BALL_RADIUS {
                 // Bounce on top border
                 ball_direction.bounce(Bounce::Horizontal);
                 vibra::vibrate(10);
             }
-            if ball_y == Display::H - PADDLE_HEIGHT - BALL_RADIUS &&
+            if ball_direction.is_down() &&
+                ball_y >= Display::H - PADDLE_HEIGHT - BALL_RADIUS &&
                 ball_x >= paddle - paddle_size &&
                 ball_x <= paddle + paddle_size {
                     // Bounce on paddle
-                    ball_direction.bounce(Bounce::Horizontal);
-                    vibra::vibrate(90);
+                    if paddle_moving && input.left_bottom() {
+                        ball_direction = Direction::UL;
+                        vibra::vibrate(50);
+                    } else if paddle_moving && input.right_bottom() {
+                        ball_direction = Direction::UR;
+                        vibra::vibrate(50);
+                    } else {
+                        ball_direction.bounce(Bounce::Horizontal);
+                        vibra::vibrate(20);
+                    }
                 }
             if ball_y >= Display::H - BALL_RADIUS {
                 return GameResult::Over(score);
@@ -179,7 +227,7 @@ fn game(mut score: u32) -> GameResult {
             if blocks.collides(ball_x - BALL_RADIUS, ball_y) ||
                 blocks.collides(ball_x + BALL_RADIUS, ball_y) {
                     ball_direction.bounce(Bounce::Vertical);
-                    score += 10000;
+                    score += 3;
                     // paddle_size += 2;
                     check_finish = true;
                     vibra::vibrate(60);
@@ -187,14 +235,14 @@ fn game(mut score: u32) -> GameResult {
             if blocks.collides(ball_x, ball_y - BALL_RADIUS) ||
                 blocks.collides(ball_x, ball_y + BALL_RADIUS) {
                     ball_direction.bounce(Bounce::Horizontal);
-                    score += 60;
+                    score += 2;
                     // paddle_size += 1;
                     check_finish = true;
                     vibra::vibrate(40);
                 }
         }
         if check_finish && blocks.is_finished() {
-            return GameResult::LevelFinish(score + 1000);
+            return GameResult::LevelFinish(score + 100);
         }
         
         display.clear(Color::black());
@@ -247,7 +295,7 @@ fn game_over(score: u32) -> bool {
     display.print(30, 0, b"Rkanoid\0", Color::white(), Color::red());
     display.print(0, 25, b"Game over!\0", Color::white(), Color::red());
     let mut score_str = [0u8; 32];
-    write!(FmtBuffer::new(&mut score_str), "Score: {}\0", score).unwrap();
+    write!(FmtBuffer::new(&mut score_str), "Score {}\0", score).unwrap();
     display.print(0, 60, &score_str, Color::white(), Color::red());
     display.print(0, 0, b"Q\0", Color::yellow(), Color::blue());
     display.print(Display::W - Display::FONT_W, Display::H - 2 * Display::FONT_H, b"S\0", Color::yellow(), Color::blue());
@@ -268,10 +316,10 @@ fn level_finish(level: u16, score: u32) -> bool {
     display.clear(Color::red());
     display.print(30, 0, b"Rkanoid\0", Color::white(), Color::red());
     let mut level_str = [0u8; 32];
-    write!(FmtBuffer::new(&mut level_str), "Level {} complete!\0", level).unwrap();
+    write!(FmtBuffer::new(&mut level_str), "Lvl {} done!\0", level + 1).unwrap();
     display.print(0, 25, &level_str, Color::white(), Color::red());
     let mut score_str = [0u8; 32];
-    write!(FmtBuffer::new(&mut score_str), "Score: {}\0", score).unwrap();
+    write!(FmtBuffer::new(&mut score_str), "Score {}\0", score).unwrap();
     display.print(0, 60, &score_str, Color::white(), Color::red());
     display.print(0, 0, b"Q\0", Color::yellow(), Color::blue());
     display.print(Display::W - Display::FONT_W, Display::H - 2 * Display::FONT_H, b"S\0", Color::yellow(), Color::blue());
@@ -295,7 +343,7 @@ fn main() {
     let mut level = 0;
     let mut score = 0;
     while !quit {
-        match game(score) {
+        match game(level, score) {
             GameResult::LevelFinish(new_score) => {
                 let again = level_finish(level, new_score);
                 quit = !again;
