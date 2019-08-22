@@ -26,11 +26,8 @@ rename with the `.elf` extension!
 
 | Crate    | Description                                               |
 | ----     | ---                                                       |
-| card10   | Helpers for implementing custom firmwares                 |
 | example  | l0dable example                                           |
 | l0dable  | Helpers for building l0dables                             |
-| max32665 | Peripheral Access Crate for implementing your own drivers |
-| watchapp | Sample firmware                                           |
 
 ## TODO
 
