@@ -2,18 +2,23 @@
 
 ## Usage
 
-You need arm-none-eabihf-gcc and Rust nightly. Use rustup or NixOS.
+You need arm-none-eabi-gcc and Rust nightly. Use rustup or NixOS.
 
 ```shell
 rustup update nightly
 rustup override set nightly
-rustup target add thumbv7em-none-eabihf
+rustup target add thumbv7em-none-eabi
+```
+
+Check out this repo's submodule (the C firmware).
+
+```shell
 cd example
 cargo build --release
 ```
 
 Then copy the resulting
-`../target/thumbv7em-none-eabihf/release/l0dable-example` to the badge
+`../target/thumbv7em-none-eabi/release/l0dable-example` to the badge
 in USB Mass Storage mode. Don't forget to rename with the `.elf`
 extension!
 
