@@ -31,8 +31,8 @@ impl Color {
 
     pub fn rgb8(r8: u8, g8: u8, b8: u8) -> Self {
         let c =
-            ((u16::from(r8) & 0xF8) << 11) |
-            ((u16::from(g8) & 0xFA) << 5) |
+            ((u16::from(r8) & 0xF8) << 8) |
+            ((u16::from(g8) & 0xFA) << 3) |
             (u16::from(b8) & 0xF8);
         Color(c)
     }
