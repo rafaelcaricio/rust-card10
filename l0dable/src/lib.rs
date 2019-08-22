@@ -64,7 +64,9 @@ pub mod bindings {
 use bindings::*;
 
 mod display;
-pub use display::Display;
+pub use display::{Display, Color, LineStyle};
+mod buttons;
+pub use buttons::Buttons;
 
 pub mod uart;
 pub const UART: uart::Uart = uart::Uart;
