@@ -9,6 +9,12 @@ rustup update nightly
 rustup override set nightly
 rustup target add thumbv7em-none-eabi
 ```
+When cloning use `--recursive` to get the submodules, otherwise update them
+afterwards:
+
+```shell
+git submodule update --init --recursive
+```
 
 Check out this repo's submodule (the C firmware).
 
