@@ -7,6 +7,8 @@ You need Rust nightly. Use rustup or NixOS.
 ```shell
 rustup update nightly
 rustup target add thumbv7em-none-eabihf
+cd example
+cargo build --release
 ```
 
 ## Crates
