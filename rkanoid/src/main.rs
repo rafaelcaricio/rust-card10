@@ -25,10 +25,14 @@ impl Blocks {
         let mut count = 0;
         for line in result.blocks.iter_mut() {
             for block in line.iter_mut() {
-                let mut buf = [0];
+                let mut buf = [0, 0, 0, 0];
                 trng::read(&mut buf);
                 if buf[0] > 0xBF {
-                    *block = Some(Color::yellow());
+                    *block = Some(Color::rgb8(
+                       0x80 | buf[1],
+                       0x80 | buf[2],
+                       0x80 | buf[3],
+                    ));
                     count += 1;
                 }
             }
@@ -50,6 +54,10 @@ impl Blocks {
             }
             None => false,
         }
+    }
+
+    fn is_finished(&self) -> bool {
+        self.blocks.iter().all(|line| line.iter().all(|block| block.is_none()))
     }
 }
 
@@ -139,6 +147,7 @@ fn game() -> u32 {
         if input.left_top() {
             exit(0);
         }
+        let mut check_finish = false;
         let speed_steps = 1 + (time() - start_time) / 10;
         for _ in 0..speed_steps {
             ball_direction.motion(&mut ball_x, &mut ball_y);
@@ -166,6 +175,7 @@ fn game() -> u32 {
                     ball_direction.bounce(Bounce::Vertical);
                     score += 100;
                     // paddle_size += 2;
+                    check_finish = true;
                     vibra::vibrate(60);
                 }
             if blocks.collides(ball_x, ball_y - BALL_RADIUS) ||
@@ -173,8 +183,12 @@ fn game() -> u32 {
                     ball_direction.bounce(Bounce::Horizontal);
                     score += 60;
                     // paddle_size += 1;
+                    check_finish = true;
                     vibra::vibrate(40);
                 }
+        }
+        if check_finish && blocks.is_finished() {
+            return score + 1000;
         }
         
         display.clear(Color::black());
@@ -182,12 +196,12 @@ fn game() -> u32 {
         display.rect(
             paddle - paddle_size, Display::H - PADDLE_HEIGHT,
             paddle + paddle_size, Display::H - 1,
-            Color::green(), FillStyle::Filled, 1
+            Color::rgb8(0x7f, 0xff, 0x7f), FillStyle::Filled, 1
         );
         // Ball
         display.circ(
             ball_x, ball_y, BALL_RADIUS,
-            Color::blue(), FillStyle::Filled, 1
+            Color::rgb8(0x7f, 0x7f, 0xff), FillStyle::Filled, 1
         );
         // Blocks
         for (lineno, line) in blocks.blocks.iter_mut().enumerate() {
