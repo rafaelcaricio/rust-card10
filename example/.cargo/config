@@ -1,10 +1,10 @@
-[target.thumbv7em-none-eabihf]
+[target.thumbv7em-none-eabi]
 rustflags = [
-  "-C", "linker=arm-none-eabihf-gcc",
+  "-C", "linker=arm-none-eabi-gcc",
   "-C", "link-args=-Tl0dable.ld -n -pie -fPIC",
   "-C", "relocation-model=pic",
 ]
 
 [build]
-target = "thumbv7em-none-eabihf" # Cortex-M4F and Cortex-M7F (with FPU)
+target = "thumbv7em-none-eabi" # Cortex-M4F and Cortex-M7F (with FPU)
 

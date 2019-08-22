@@ -17,8 +17,8 @@ fn main() {
 
     // Link against C code
     cc::Build::new()
-        .target("thumbv7em-none-eabihf")
-        .compiler("arm-none-eabihf-gcc")
+        .target("thumbv7em-none-eabi")
+        .compiler("arm-none-eabi-gcc")
         .define("TARGET", "MAX32665")
         .define("TARGET_UC", "MAX32665")
         .define("TARGET_LC", "max32665")
