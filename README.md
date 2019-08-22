@@ -19,8 +19,8 @@ cargo build --release
 
 Then copy the resulting
 `../target/thumbv7em-none-eabi/release/l0dable-example` to the badge
-in USB Mass Storage mode. Don't forget to rename with the `.elf`
-extension!
+in USB Mass Storage mode in the `/apps/` subfolder. Don't forget to
+rename with the `.elf` extension!
 
 ## Crates
 
