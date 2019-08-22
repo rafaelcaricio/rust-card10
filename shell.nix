@@ -3,7 +3,7 @@
 with pkgs;
 with import ./default.nix;
 
-stdenv.mkDerivation {
+multiStdenv.mkDerivation {
   name = "env";
   buildInputs = [
     gdb
