@@ -37,6 +37,7 @@ fn main() {
         .file("../c/epicardium/api/caller.c")
         .file("src/client.c")
         .compile("card10");
+    println!("cargo:rerun-if-changed=src/client.rs");
 
     // Generate bindings to C code
     let bindings = bindgen::Builder::default()
@@ -52,6 +53,7 @@ fn main() {
         .ctypes_prefix("super::ctypes")
         .generate()
         .expect("Unable to generate bindings");
+    println!("cargo:rerun-if-changed=src/bindings.h");
 
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
     bindings
