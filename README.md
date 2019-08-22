@@ -12,6 +12,11 @@ cd example
 cargo build --release
 ```
 
+Then copy the resulting
+`../target/thumbv7em-none-eabihf/release/l0dable-example` to the badge
+in USB Mass Storage mode. Don't forget to rename with the `.elf`
+extension!
+
 ## Crates
 
 | Crate    | Description                                               |
