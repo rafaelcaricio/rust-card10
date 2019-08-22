@@ -81,6 +81,8 @@ mod utime;
 pub use utime::time;
 mod fmt_buffer;
 pub use fmt_buffer::FmtBuffer;
+mod bme680;
+pub use bme680::BME680;
 
 pub fn exit(ret: i32) -> ! {
     unsafe {

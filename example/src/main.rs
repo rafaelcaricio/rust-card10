@@ -7,10 +7,12 @@ use l0dable::*;
 main!(main);
 fn main() {
     writeln!(UART, "Hello from Rust\r").unwrap();
+    let bme = BME680::start();
     
     let display = Display::open();
     let light = LightSensor::start();
     for t in 0..Display::W {
+        writeln!(UART, "BME: {:?}\r", bme.read()).unwrap();
         display.clear(Color::yellow());
         display.print(160 - t, 10, b"Hello Rust\0", Color::white(), Color::black());
 
