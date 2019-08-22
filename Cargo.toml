@@ -5,6 +5,7 @@ members = [
   "l0dable",
   "watchapp",
   "example",
+  "rkanoid",
 ]
 
 [profile.release]

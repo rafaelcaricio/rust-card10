@@ -251,6 +251,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "l0dable-rkanoid"
+version = "0.0.0"
+dependencies = [
+ "cc 1.0.37 (registry+https://github.com/rust-lang/crates.io-index)",
+ "l0dable 0.0.0",
+]
+
+[[package]]
 name = "lazy_static"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
