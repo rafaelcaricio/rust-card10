@@ -1,0 +1,11 @@
+[package]
+edition = "2018"
+name = "l0dable-rkanoid"
+version = "0.0.0"
+authors = ["Astro <astro@spaceboyz.net>"]
+
+[dependencies]
+l0dable = { path = "../l0dable" }
+
+[build-dependencies]
+cc = "1.0"
