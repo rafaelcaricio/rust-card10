@@ -2,10 +2,11 @@
 
 ## Usage
 
-You need Rust nightly. Use rustup or NixOS.
+You need arm-none-eabihf-gcc and Rust nightly. Use rustup or NixOS.
 
 ```shell
 rustup update nightly
+rustup override set nightly
 rustup target add thumbv7em-none-eabihf
 cd example
 cargo build --release
