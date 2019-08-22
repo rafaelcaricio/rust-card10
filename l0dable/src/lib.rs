@@ -67,9 +67,10 @@ mod display;
 pub use display::{Display, Color, LineStyle};
 mod buttons;
 pub use buttons::Buttons;
-
 pub mod uart;
 pub const UART: uart::Uart = uart::Uart;
+mod light_sensor;
+pub use light_sensor::LightSensor;
 
 pub fn exit(ret: i32) -> ! {
     unsafe {
