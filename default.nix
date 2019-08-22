@@ -27,7 +27,7 @@ let
     version = "0.0.0";
     src = ./.;
     cargoSha256 = "10qv30p3kr570glnyn37b6r8pgx48zj0mr9qf84m4wk4sjp3wxsd";
-    buildInputs = [ pkgsCross.armhf-embedded.stdenv.cc ];
+    buildInputs = [ pkgsCross.armhf-embedded.stdenv.cc glibc_multi ];
     prePatch = ''
       cp ${epic-stubs}/client.c l0dable/src/
     '';
