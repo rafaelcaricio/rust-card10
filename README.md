@@ -1,8 +1,16 @@
 # Rust support for the card10 CCCamp15 badge
 
+## Prerequisites
+
+You need Rust Nightly and the arm-none-eabi-gcc toolchain, including libc.
+
+### Arch Linux
+
+    sudo pacman -S arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib
+
 ## Usage
 
-You need arm-none-eabi-gcc and Rust nightly. Use rustup or NixOS.
+You need Rust nightly. Use rustup or NixOS.
 
 ```shell
 rustup update nightly
