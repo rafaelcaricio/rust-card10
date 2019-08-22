@@ -1,5 +1,6 @@
 use super::bindings::*;
 
+#[derive(Debug, Clone, Copy)]
 #[repr(C)]
 pub struct Color(u16);
 
@@ -9,11 +10,11 @@ impl Color {
     }
 
     pub fn blue() -> Self {
-        Self::rgb8(0xff, 0, 0)
+        Self::rgb8(0, 0, 0xff)
     }
 
     pub fn green() -> Self {
-        Self::rgb8(0xff, 0, 0)
+        Self::rgb8(0, 0xff, 0)
     }
 
     pub fn black() -> Self {
@@ -67,11 +68,19 @@ pub enum LineStyle {
     Dotted = disp_linestyle_LINESTYLE_DOTTED,
 }
 
+#[repr(u32)]
+pub enum FillStyle {
+    Empty = disp_fillstyle_FILLSTYLE_EMPTY,
+    Filled = disp_fillstyle_FILLSTYLE_FILLED,
+}
+
 pub struct Display;
 
 impl Display {
     pub const W: u16 = 160;
     pub const H: u16 = 80;
+    pub const FONT_W: u16 = 14;
+    pub const FONT_H: u16 = 20;
 
     pub fn open() -> Self {
         unsafe { epic_disp_open(); }
@@ -105,11 +114,17 @@ impl Display {
         }
     }
 
-    // pub fn rect(&self) {
-    // }
+    pub fn rect(&self, x1: u16, y1: u16, x2: u16, y2: u16, color: Color, fillstyle: FillStyle, pixelsize: u16) {
+        unsafe {
+            epic_disp_rect(x1, y1, x2, y2, color.0, fillstyle as u32, pixelsize);
+        }
+    }
 
-    // pub fn circle(&self) {
-    // }
+    pub fn circ(&self, x: u16, y: u16, rad: u16, color: Color, fillstyle: FillStyle, pixelsize: u16) {
+        unsafe {
+            epic_disp_circ(x, y, rad, color.0, fillstyle as u32, pixelsize);
+        }
+    }
 }
 
 impl Drop for Display {

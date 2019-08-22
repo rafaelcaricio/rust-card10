@@ -64,7 +64,7 @@ pub mod bindings {
 use bindings::*;
 
 mod display;
-pub use display::{Display, Color, LineStyle};
+pub use display::{Display, Color, LineStyle, FillStyle};
 mod buttons;
 pub use buttons::Buttons;
 pub mod uart;
@@ -72,6 +72,11 @@ pub const UART: uart::Uart = uart::Uart;
 mod light_sensor;
 pub use light_sensor::LightSensor;
 pub mod vibra;
+pub mod trng;
+mod utime;
+pub use utime::time;
+mod fmt_buffer;
+pub use fmt_buffer::FmtBuffer;
 
 pub fn exit(ret: i32) -> ! {
     unsafe {
