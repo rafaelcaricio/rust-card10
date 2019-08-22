@@ -17,9 +17,11 @@ fn main() {
         let b = Buttons::read();
         if b.left_bottom() {
             display.print(0, 60, b"LB\0", Color::red(), Color::black());
+            vibra::set(true);
         }
         if b.right_bottom() {
             display.print(80, 60, b"RB\0", Color::red(), Color::black());
+            vibra::set(false);
         }
         if b.left_top() {
             display.print(0, 10, b"LT\0", Color::red(), Color::black());
@@ -30,7 +32,7 @@ fn main() {
         if b.right_top() {
             display.print(80, 30, b"Reset\0", Color::red(), Color::black());
         }
-        writeln!(UART, "Light: {:?}\r", light.get());
+        writeln!(UART, "Light: {:?}\r", light.get()).unwrap();
         
         display.update();
     }

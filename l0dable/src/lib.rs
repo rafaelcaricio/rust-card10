@@ -71,6 +71,7 @@ pub mod uart;
 pub const UART: uart::Uart = uart::Uart;
 mod light_sensor;
 pub use light_sensor::LightSensor;
+pub mod vibra;
 
 pub fn exit(ret: i32) -> ! {
     unsafe {
