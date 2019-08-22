@@ -3,7 +3,7 @@
 set -e
 
 cargo build --release
-arm-none-eabihf-objcopy -O binary target/thumbv7em-none-eabihf/release/$2 card10.bin
+arm-none-eabi-objcopy -O binary target/thumbv7em-none-eabi/release/$2 card10.bin
 python c/bootloader/crc_patch.py card10.bin
 
 echo "Copy this file to the device in USB Mass Storage mode:"
