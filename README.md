@@ -4,6 +4,11 @@
 
 You need Rust nightly. Use rustup or NixOS.
 
+```shell
+rustup update nightly
+rustup target add thumbv7em-none-eabihf
+```
+
 ## Crates
 
 | Crate    | Description                                               |
@@ -16,5 +21,23 @@ You need Rust nightly. Use rustup or NixOS.
 
 ## TODO
 
-- [ ] generate `client.c` with nix
+- arkanoid
 - [ ] alloc
+
+
+# Talk
+
+- rust on the rad10, on the r0ket
+- prototype
+- ideal: everything in safe idiomatic rust with nice interfaces
+- too much work duplicating C effort
+- firmware (max PAC, card10, watchapp)
+- still need too learn many details
+
+- day 0: start looking at epicardium/pycardium
+- l0dables as most user-friendly way
+- example/main.rs
+- how built:
+  - .cargo/config
+  - l0dable/build.rs
+  - l0dable/lib.rs
