@@ -1,4 +1,5 @@
 use super::bindings::*;
+use super::framebuffer::FrameBuffer;
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
@@ -124,6 +125,10 @@ impl Display {
         unsafe {
             epic_disp_circ(x, y, rad, color.0, fillstyle as u32, pixelsize);
         }
+    }
+
+    pub fn framebuffer<'d>(&'d self) -> FrameBuffer<'d> {
+        FrameBuffer::uninitialized(self)
     }
 }
 

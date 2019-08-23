@@ -70,6 +70,7 @@ mod os;
 pub use os::*;
 mod display;
 pub use display::{Display, Color, LineStyle, FillStyle};
+pub mod framebuffer;
 mod buttons;
 pub use buttons::Buttons;
 pub mod uart;
