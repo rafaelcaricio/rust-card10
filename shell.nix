@@ -3,10 +3,11 @@
 with pkgs;
 with import ./default.nix;
 
-multiStdenv.mkDerivation {
+stdenv.mkDerivation {
   name = "env";
   buildInputs = [
     gdb
+    glibc_multi
     rust
     pkgsCross.arm-embedded.stdenv.cc
     openocd
