@@ -17,6 +17,12 @@ categories = ["no-std"]
 description = """
 make l0dables for the Card10 (CCCamp 2019) badge
 """
+include = [
+    "**/*.rs",
+    "Cargo.toml",
+    "l0dable.ld",
+    "../c/",
+]
 
 [dependencies]
 r0 = "0.2"
