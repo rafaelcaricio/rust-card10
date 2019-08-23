@@ -65,8 +65,9 @@ pub mod bindings {
 
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
-use bindings::*;
 
+mod os;
+pub use os::*;
 mod display;
 pub use display::{Display, Color, LineStyle, FillStyle};
 mod buttons;
