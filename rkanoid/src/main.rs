@@ -163,7 +163,7 @@ enum GameResult {
 }
 
 fn game(level: u16, mut score: u32) -> GameResult {
-    let start_time = time();
+    let start_time = Seconds::time();
     let display = Display::open();
 
     let mut paddle = Display::W / 2;
@@ -188,7 +188,7 @@ fn game(level: u16, mut score: u32) -> GameResult {
             exit(0);
         }
         let mut check_finish = false;
-        let speed_steps = 2 + (time() - start_time) / 15;
+        let speed_steps = 2 + (Seconds::time() - start_time) / 15;
         let speed_steps = (speed_steps >> 1) +
             (speed_steps & tick & 1);
         for _ in 0..speed_steps {
