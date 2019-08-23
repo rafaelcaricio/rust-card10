@@ -26,21 +26,22 @@ let
     name = "rust-card10";
     version = "0.0.0";
     src = ./.;
-    cargoSha256 = "10qv30p3kr570glnyn37b6r8pgx48zj0mr9qf84m4wk4sjp3wxsd";
-    buildInputs = [ pkgsCross.arm-embedded.stdenv.cc glibc_multi ];
+    cargoSha256 = "10nims5j9r0d7pcfbbj8ycqxhcx7n07958jvkib29b0sf9c6qh3z";
+    buildInputs = [ pkgsCross.arm-embedded.stdenv.cc ];
     prePatch = ''
       cp ${epic-stubs}/client.c l0dable/src/
     '';
+    NIX_DEBUG=1;
+    LIBCLANG_PATH="${llvmPackages.libclang}/lib";
+    CARGO_HOME="$(mktemp -d cargo-home.XXX)";
     preBuild = ''
-      export LIBCLANG_PATH=${llvmPackages.libclang}/lib
-      export CPATH=${glibc_multi.dev}/include
-      export CARGO_HOME=$(mktemp -d cargo-home.XXX)
+      export CPATH="${glibc_multi.dev}/include:${stdenv.cc.cc}/lib/gcc/$(cc -dumpmachine)/${lib.getVersion pkgsCross.arm-embedded.stdenv.cc.cc}/include"
       cd example
     '';
     doCheck = false;
     installPhase = ''
-      mkdir -p $out/lib
-      cp target/thumbv7em-none-eabi/release/example $out/lib/example.elf
+      mkdir -p $out/apps
+      cp ../target/thumbv7em-none-eabi/release/l0dable-example $out/apps/example.elf
     '';
   };
 in {
