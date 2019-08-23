@@ -5,7 +5,7 @@
 You need rust nightly and a working setup to compile the card10
 firmware including the matching libc.
 
-1) For instructions how to setup rust please see `https://rustup.rs`.
+1) For instructions how to setup rust please see https://rustup.rs.
 
    Please ensure that you installed the latest rust nightly toolchain
    and add the `thumbv7em-none-eabi` target.
@@ -17,7 +17,7 @@ firmware including the matching libc.
    ```
 
 2) For instructions how to setup the card10 firmware check the dependency
-   chapter in `https://firmware.card10.badge.events.ccc.de/how-to-build.html`.
+   chapter in https://firmware.card10.badge.events.ccc.de/how-to-build.html.
 
 3) Additionally you may need the packages for the llvm and libc i386
    dev headers.
@@ -36,7 +36,7 @@ to run custom elf binaries on the core. This requires a custom build
 with `-Djailbreak_card10=true` as bootstrapping flag.
 
 Assuming that you installed all required dependencies mentioned in
-`https://firmware.card10.badge.events.ccc.de/how-to-build.html` this
+https://firmware.card10.badge.events.ccc.de/how-to-build.html this
 should work as following:
 
 ```shell
