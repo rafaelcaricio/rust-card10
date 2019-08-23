@@ -36,6 +36,11 @@ fn main() {
         .file("../c/l0dables/lib/hardware.c")
         .file("../c/epicardium/api/caller.c")
         .file("src/client.c")
+        .file("../c/lib/gfx/Fonts/font12.c")
+        .file("../c/lib/gfx/Fonts/font16.c")
+        .file("../c/lib/gfx/Fonts/font20.c")
+        .file("../c/lib/gfx/Fonts/font24.c")
+        .file("../c/lib/gfx/Fonts/font8.c")
         .compile("card10");
     println!("cargo:rerun-if-changed=src/client.rs");
 
