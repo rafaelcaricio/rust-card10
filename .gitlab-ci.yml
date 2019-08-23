@@ -6,7 +6,7 @@ nix:
   script:
     - nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs
     - nix-channel --update
-    - nix-build
+    - nix-build -A firmware
   artifacts:
     paths:
      - result/apps
