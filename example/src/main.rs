@@ -2,7 +2,7 @@
 #![no_main]
 
 use core::fmt::Write;
-use l0dable::*;
+use card10_l0dable::*;
 
 main!(main);
 fn main() {

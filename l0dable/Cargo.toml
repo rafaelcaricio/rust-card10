@@ -1,8 +1,23 @@
 [package]
 edition = "2018"
-name = "l0dable"
-version = "0.0.0"
-authors = ["Astro <astro@spaceboyz.net>"]
+name = "card10-l0dable"
+version = "0.1.0"
+authors = ["Astro <astro@spaceboyz.net>", "Kloenk <me@kloenk.de>"]
+license = "MIT/Apache-2.0"
+repository = "https://git.card10.badge.events.ccc.de/astro/rust-card10"
+homepage = "https://git.card10.badge.events.ccc.de/astro/rust-card10"
+keywords = [
+    "CCC",
+    "CCCamp2019",
+    "CCCamp19",
+    "card10",
+    "l0dable",
+    "badge",
+]
+categories = ["no-std"]
+description = """
+make l0dables for the Card10 (CCCamp 2019) badge
+"""
 
 [dependencies]
 r0 = "0.2"

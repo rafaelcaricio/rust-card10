@@ -2,7 +2,7 @@
 #![no_main]
 
 use core::fmt::Write;
-use l0dable::*;
+use card10_l0dable::*;
 
 pub const BALL_RADIUS: u16 = 4;
 pub const PADDLE_SPACE: u16 = 32;
