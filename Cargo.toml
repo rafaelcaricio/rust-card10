@@ -4,6 +4,10 @@ members = [
   "example",
   "rkanoid",
 ]
+default-members = [
+  "example",
+  "rkanoid",
+]
 
 [profile.release]
 codegen-units = 1
