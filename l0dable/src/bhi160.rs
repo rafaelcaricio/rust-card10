@@ -40,6 +40,7 @@ impl SensorType for Orientation {
     }
 }
 
+const DATA_MAX: usize = 10;
 
 pub struct Sensor<S: SensorType> {
     stream_id: i32,
@@ -64,7 +65,7 @@ impl<S: SensorType> Sensor<S> {
     }
 
     pub fn read(&self) -> SensorData<S> {
-        let mut buf: [bhi160_data_vector; 100] = unsafe {
+        let mut buf: [bhi160_data_vector; DATA_MAX] = unsafe {
             uninitialized()
         };
         let n = unsafe {
@@ -86,8 +87,6 @@ impl<S: SensorType> Drop for Sensor<S> {
         unsafe { epic_bhi160_disable_sensor(S::sensor_type()); }
     }
 }
-
-const DATA_MAX: usize = 10;
 
 pub struct SensorData<S> {
     buf: [bhi160_data_vector; DATA_MAX],
