@@ -8,11 +8,26 @@ main!(main);
 fn main() {
     writeln!(UART, "Hello from Rust\r").unwrap();
     let bme = BME680::start();
+    let a = BHI160::<Accelerometer>::start();
+    let g = BHI160::<Gyroscope>::start();
+    let o = BHI160::<Orientation>::start();
     
     let display = Display::open();
     let light = LightSensor::start();
     for t in 0..Display::W {
         writeln!(UART, "BME: {:?}\r", bme.read()).unwrap();
+        writeln!(UART, "A:\r").unwrap();
+        for d in &a.read() {
+            writeln!(UART, " - {:?}\r", d).unwrap();
+        }
+        writeln!(UART, "O:\r").unwrap();
+        for d in &o.read() {
+            writeln!(UART, " - {:?}\r", d).unwrap();
+        }
+        writeln!(UART, "G:\r").unwrap();
+        for d in &g.read() {
+            writeln!(UART, " - {:?}\r", d).unwrap();
+        }
         display.clear(Color::yellow());
         display.print(160 - t, 10, b"Hello Rust\0", Color::white(), Color::black());
 
