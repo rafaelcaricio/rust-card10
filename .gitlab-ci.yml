@@ -1,4 +1,4 @@
-nix:
+l0dables:
   stage: build
   image: nixos/nix:latest
   variables:
@@ -6,9 +6,27 @@ nix:
   script:
     - nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs
     - nix-channel --update
-    - nix-build -A firmware
+    - nix-build -A l0dables
     - cp -r result/apps apps
   artifacts:
     paths:
      - apps
+    expire_in: 1 week
+
+firmware:
+  stage: build
+  image: nixos/nix:latest
+  variables:
+    GIT_SUBMODULE_STRATEGY: normal
+  script:
+    - nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs
+    - nix-channel --update
+    - nix-build release.nix
+    - cp -r result/* .
+  artifacts:
+    paths:
+      - card10.bin
+      - apps
+      - main.py
+      - menu.py
     expire_in: 1 week

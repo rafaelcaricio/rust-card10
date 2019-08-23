@@ -1,0 +1,46 @@
+From 93c318a284f7b0f3bce2046e1f631599190eaa10 Mon Sep 17 00:00:00 2001
+From: Astro <astro@spaceboyz.net>
+Date: Fri, 23 Aug 2019 19:44:45 +0200
+Subject: [PATCH] feat(nix): add jailbreak arg
+
+---
+ default.nix | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/default.nix b/default.nix
+index dc9649bc..c49d0ab2 100644
+--- a/default.nix
++++ b/default.nix
+@@ -1,4 +1,8 @@
+-with import <nixpkgs> {};
++{ pkgs ? import <nixpkgs> {},
++  jailbreak ? false,
++}:
++
++with pkgs;
+ 
+ let
+   py = python36;
+@@ -12,6 +16,10 @@ let
+       sha256 = "15nkx0pa4lskwin84flpk8fsw3jqg6wic6v3s83syjqg76h6my61";
+     };
+   };
++  mesonOpt =
++    if jailbreak
++    then "-Djailbreak_card10=true"
++    else "";
+ in stdenv.mkDerivation rec {
+   name = "card10";
+   nativeBuildInputs = [
+@@ -39,7 +47,7 @@ in stdenv.mkDerivation rec {
+     done
+ 
+     # Actually run the build.
+-    meson --cross-file card10-cross.ini "$build"
++    meson --cross-file card10-cross.ini ${mesonOpt} "$build"
+     ninja -C "$build" -j $NIX_BUILD_CORES
+ 
+     # Copy ELFs for debugging
+-- 
+2.22.0
+

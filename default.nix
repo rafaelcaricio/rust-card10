@@ -22,7 +22,7 @@ let
       cp client.c server.c $out/
     '';
   };
-  firmware = rustPlatform.buildRustPackage rec {
+  l0dables = rustPlatform.buildRustPackage rec {
     name = "rust-card10";
     version = "0.0.0";
     src = ./.;
@@ -48,5 +48,5 @@ let
     '';
   };
 in {
-  inherit rust rustPlatform firmware epic-stubs;
+  inherit rust rustPlatform l0dables epic-stubs;
 }
