@@ -13,11 +13,8 @@ stdenv.mkDerivation {
     openocd
   ];
 
-  # Set Environment Variables
-  RUST_BACKTRACE = 1;
-
+  LIBCLANG_PATH="${llvmPackages.libclang}/lib"
   shellHook = ''
-    export LIBCLANG_PATH=${llvmPackages.libclang}/lib
-    echo "Run 'cd example && cargo build --release'"
+    echo "Run 'cargo build --release'"
   '';
 }

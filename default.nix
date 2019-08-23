@@ -36,12 +36,15 @@ let
     CARGO_HOME="$(mktemp -d cargo-home.XXX)";
     preBuild = ''
       export CPATH="${glibc_multi.dev}/include:${stdenv.cc.cc}/lib/gcc/$(cc -dumpmachine)/${lib.getVersion pkgsCross.arm-embedded.stdenv.cc.cc}/include"
-      cd example
     '';
     doCheck = false;
     installPhase = ''
       mkdir -p $out/apps
-      cp ../target/thumbv7em-none-eabi/release/l0dable-example $out/apps/example.elf
+      for f in target/thumbv7em-none-eabi/release/* ; do
+        if [ -x $f ] && [ ! -d $f ] ; then
+          cp $f $out/apps/$(basename $f).elf
+        fi
+      done
     '';
   };
 in {
