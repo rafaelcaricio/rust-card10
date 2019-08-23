@@ -188,7 +188,7 @@ fn game(level: u16, mut score: u32) -> GameResult {
             exit(0);
         }
         let mut check_finish = false;
-        let speed_steps = 2 + (Seconds::time() - start_time) / 15;
+        let speed_steps = 2 + (Seconds::time() - start_time).0 / 15;
         let speed_steps = (speed_steps >> 1) +
             (speed_steps & tick & 1);
         for _ in 0..speed_steps {

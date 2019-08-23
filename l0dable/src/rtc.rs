@@ -6,6 +6,7 @@ pub trait Time {
     fn set_time(&self);
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct Seconds(pub u32);
 
 impl From<MilliSeconds> for Seconds {
@@ -31,6 +32,7 @@ impl Sub for Seconds {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
 pub struct MilliSeconds(pub u64);
 
 impl From<Seconds> for MilliSeconds {
