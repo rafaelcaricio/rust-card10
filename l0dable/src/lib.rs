@@ -86,3 +86,4 @@ mod bme680;
 pub use bme680::BME680;
 mod bhi160;
 pub use bhi160::{Sensor as BHI160, Accelerometer, Orientation, Gyroscope, SensorData as BHI160Data};
+pub mod fs;
