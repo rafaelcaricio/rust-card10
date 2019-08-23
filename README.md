@@ -45,5 +45,4 @@ rename with the `.elf` extension!
 
 ## TODO
 
-- arkanoid
 - [ ] alloc
