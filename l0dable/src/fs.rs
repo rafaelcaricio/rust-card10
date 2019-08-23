@@ -52,6 +52,7 @@ impl<'a> Iterator for ReadDir {
     }
 }
 
+#[allow(non_camel_case_types)]
 #[repr(u8)]
 #[derive(Copy, Clone)]
 pub enum epic_stat_type {
@@ -60,6 +61,7 @@ pub enum epic_stat_type {
     Dir = 2,
 }
 
+#[allow(non_camel_case_types)]
 #[repr(packed)]
 #[derive(Copy, Clone)]
 pub struct epic_stat {
