@@ -1,13 +1,13 @@
 use core::fmt::Write;
-use super::{FrameBuffer, Font};
-use crate::{Color, Display};
+use super::{FrameBuffer, Font, RawColor};
+use crate::{Display};
 
 pub struct TextRenderer<'a, 'd, 'f> {
     pub framebuffer: &'a mut FrameBuffer<'d>,
     pub x: isize,
     pub y: isize,
     pub font: &'f Font,
-    pub color: Color,
+    pub color: RawColor,
 }
 
 impl<'a, 'd, 'f> Write for TextRenderer<'a, 'd, 'f> {
@@ -23,13 +23,13 @@ impl<'a, 'd, 'f> Write for TextRenderer<'a, 'd, 'f> {
             None => Ok(()),
             Some(glyph) => {
                 for y in 0..self.font.h {
-                    let y1 = self.y + y as isize;
-                    if y1 >= 0 && y1 < Display::H as isize {
+                    let y1 = (self.y + y as isize) as u16;
+                    if y1 < Display::H {
                         for x in 0..self.font.w {
-                            let x1 = self.x + x as isize;
-                            if x1 >= 0 && x1 < Display::W as isize {
+                            let x1 = (self.x + x as isize) as u16;
+                            if x1 < Display::W {
                                 if glyph.get_pixel(x as usize, y as usize) {
-                                    self.framebuffer[y1 as usize][x1 as usize] = self.color;
+                                    self.framebuffer[(x1, y1)] = self.color;
                                 }
                             }
                         }
