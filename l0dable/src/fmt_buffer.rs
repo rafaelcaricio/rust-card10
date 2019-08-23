@@ -1,5 +1,7 @@
 //! Stolen from https://stackoverflow.com/questions/39488327/how-to-format-output-to-a-byte-array-with-no-std-and-no-allocator
-use core::fmt;
+use core::fmt::{self, Write};
+use core::mem::uninitialized;
+use core::str::from_utf8_unchecked;
 
 pub struct FmtBuffer<'a> {
     buf: &'a mut [u8],
@@ -32,5 +34,23 @@ impl<'a> fmt::Write for FmtBuffer<'a> {
         self.offset += bytes.len();
 
         Ok(())
+    }
+}
+
+/// 256 bytes ought to be enough for any string
+pub fn str_to_cstr(s: &str) -> [u8; 256] {
+    let mut buf: [u8; 256] = unsafe { uninitialized() };
+    let mut fmt = FmtBuffer::new(buf.as_mut());
+    write!(fmt, "{}\0", s).unwrap();
+    buf
+}
+
+impl AsRef<str> for FmtBuffer<'_> {
+    fn as_ref(&self) -> &str {
+        let len = self.buf.iter().position(|b| *b == 0)
+            .unwrap_or(0);
+        unsafe {
+            from_utf8_unchecked(&self.buf[0..len])
+        }
     }
 }

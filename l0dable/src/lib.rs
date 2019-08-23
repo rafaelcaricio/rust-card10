@@ -81,15 +81,8 @@ pub mod trng;
 mod utime;
 pub use utime::time;
 mod fmt_buffer;
-pub use fmt_buffer::FmtBuffer;
+pub use fmt_buffer::{FmtBuffer, str_to_cstr};
 mod bme680;
 pub use bme680::BME680;
 mod bhi160;
 pub use bhi160::{Sensor as BHI160, Accelerometer, Orientation, Gyroscope, SensorData as BHI160Data};
-
-pub fn exit(ret: i32) -> ! {
-    unsafe {
-        epic_exit(ret);
-    }
-    unreachable!()
-}
