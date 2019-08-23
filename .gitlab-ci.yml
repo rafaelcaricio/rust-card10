@@ -7,7 +7,9 @@ nix:
     - nix-channel --add https://nixos.org/channels/nixos-19.03 nixpkgs
     - nix-channel --update
     - nix-build -A firmware
+    - mkdir output
+    - cp -r result/apps output/apps
   artifacts:
     paths:
-     - result/apps
+     - output/apps
     expire_in: 1 week
