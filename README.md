@@ -51,29 +51,28 @@ And then copy `build/pycardium/pycardium_epicardium.bin` as
 ## Build and run Rust loadables
 
 ```shell
-cd example/
 cargo +nightly build --release --target thumbv7-none-eabi
 ```
 
 Then copy the resulting executable from the target directory 
-`../target/thumbv7em-none-eabi/release/l0dable-example` into the
+`target/thumbv7em-none-eabi/release/example` into the
 `apps` directory of your badge.
 
-**Attention**: Its necessary to rename the executable to add the
-`elf` extension (e.g `l0adable-example` must be renamed as
-`l0adable-example.elf`).
+**Attention**: Its necessary to rename the executable to add the `elf`
+extension (e.g `example` must be renamed as `example.elf`).
 
 ## Crates
 
 | Crate    | Description                                               |
 | ----     | ---                                                       |
+| l0dable  | Helper crate for building l0dables                        |
 | example  | l0dable example                                           |
-| l0dable  | Helpers for building l0dables                             |
+| rkanoid  | Arkanoid clone                                            |
 
 
 ## Misc
 
-### How to update the firmware
+### How to update the firmware bindings
 
 1) Update the `c/` submodule to the latest firmware state.
 
