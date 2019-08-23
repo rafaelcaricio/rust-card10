@@ -1,40 +1,67 @@
-# Rust support for the card10 CCCamp15 badge
+# Rust support for the card10 CCCamp19 badge
 
 ## Prerequisites
 
-You need Rust Nightly and the arm-none-eabi-gcc toolchain, including libc.
+You need rust nightly and a working setup to compile the card10
+firmware including the matching libc.
 
-### Arch Linux
+1) For instructions how to setup rust please see `https://rustup.rs`.
 
-    sudo pacman -S arm-none-eabi-gcc arm-none-eabi-binutils arm-none-eabi-newlib
+   Please ensure that you installed the latest rust nightly toolchain
+   and add the `thumbv7em-none-eabi` target.
 
-## Usage
+   ```shell
+   rustup toolchain install nightly
+   rustup update
+   rustup target add thumbv7em-none-eabi --toolchain nightly
+   ```
 
-You need Rust nightly. Use rustup or NixOS.
+2) For instructions how to setup the card10 firmware check the dependency
+   chapter in `https://firmware.card10.badge.events.ccc.de/how-to-build.html`.
+
+3) Additionally you may need the packages for the llvm and libc i386
+   dev headers.
+
+4) Clone this repository with `--recursive` to get the submodules,
+   otherwise update them afterwards:
+
+   ```shell
+   git submodule update --init --recursive
+   ```
+
+## Setup a Rust enabled firmware
+
+To allow rust based apps on card10 you need a firmware which allows
+to run custom elf binaries on the core. This requires a custom build
+with `-Djailbreak_card10=true` as bootstrapping flag.
+
+Assuming that you installed all required dependencies mentioned in
+`https://firmware.card10.badge.events.ccc.de/how-to-build.html` this
+should work as following:
 
 ```shell
-rustup update nightly
-rustup override set nightly
-rustup target add thumbv7em-none-eabi
+cd c/
+./bootstrap -Djailbreak_card10=true
+ninja -C build/
 ```
-When cloning use `--recursive` to get the submodules, otherwise update them
-afterwards:
+
+And then copy `build/pycardium/pycardium_epicardium.bin` as
+`card10.bin` onto your badge.
+
+## Build and run Rust loadables
 
 ```shell
-git submodule update --init --recursive
+cd example/
+cargo +nightly build --release --target thumbv7-none-eabi
 ```
 
-Check out this repo's submodule (the C firmware).
+Then copy the resulting executable from the target directory 
+`../target/thumbv7em-none-eabi/release/l0dable-example` into the
+`apps` directory of your badge.
 
-```shell
-cd example
-cargo build --release
-```
-
-Then copy the resulting
-`../target/thumbv7em-none-eabi/release/l0dable-example` to the badge
-in USB Mass Storage mode in the `/apps/` subfolder. Don't forget to
-rename with the `.elf` extension!
+**Attention**: Its necessary to rename the executable to add the
+`elf` extension (e.g `l0adable-example` must be renamed as
+`l0adable-example.elf`).
 
 ## Crates
 
@@ -42,6 +69,23 @@ rename with the `.elf` extension!
 | ----     | ---                                                       |
 | example  | l0dable example                                           |
 | l0dable  | Helpers for building l0dables                             |
+
+
+## Misc
+
+### How to update the firmware
+
+1) Update the `c/` submodule to the latest firmware state.
+
+2) Rebuild the firmware as described above.
+
+3) Run the following script from the project root directory
+
+   ```shell
+   python c/epicardium/api/genapi.py -H c/epicardium/epicardium.h -c l0dable/src/client.c -s l0dable/src/server.c
+   ```
+
+4) Rebuild your app :)
 
 ## TODO
 
