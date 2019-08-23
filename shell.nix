@@ -13,8 +13,9 @@ stdenv.mkDerivation {
     openocd
   ];
 
-  LIBCLANG_PATH="${llvmPackages.libclang}/lib"
+  LIBCLANG_PATH="${llvmPackages.libclang}/lib";
   shellHook = ''
+    export CPATH="${glibc_multi.dev}/include:${stdenv.cc.cc}/lib/gcc/$(cc -dumpmachine)/${lib.getVersion pkgsCross.arm-embedded.stdenv.cc.cc}/include"
     echo "Run 'cargo build --release'"
   '';
 }
