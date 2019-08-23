@@ -1,3 +1,6 @@
 target/
 venv/
 .idea/
+
+# nix results
+result*
