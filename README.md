@@ -62,7 +62,7 @@ And then copy `build/pycardium/pycardium_epicardium.bin` as
 ## Build and run Rust loadables
 
 ```shell
-cargo +nightly build --release --target thumbv7-none-eabi
+cargo +nightly build --release --target thumbv7em-none-eabi
 ```
 
 Then copy the resulting executable from the target directory 
