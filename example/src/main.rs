@@ -1,33 +1,46 @@
 #![no_std]
 #![no_main]
 
-use core::fmt::Write;
 use card10_l0dable::*;
+use core::fmt::{self, Write};
 
 main!(main);
 fn main() {
-    writeln!(UART, "Hello from Rust\r").unwrap();
+    let result = run();
+    if let Err(error) = result {
+        writeln!(UART, "error: {}\r", error).unwrap();
+    }
+}
+
+fn run() -> Result<(), Error> {
+    writeln!(UART, "Hello from Rust\r")?;
+
     let bme = BME680::start();
-    let a = BHI160::<Accelerometer>::start();
-    let g = BHI160::<Gyroscope>::start();
-    let o = BHI160::<Orientation>::start();
-    
+    let a = BHI160::<Accelerometer>::start()?;
+    let g = BHI160::<Gyroscope>::start()?;
+    let o = BHI160::<Orientation>::start()?;
+
     let display = Display::open();
     let light = LightSensor::start();
+
     for t in 0..Display::W {
-        writeln!(UART, "BME: {:?}\r", bme.read()).unwrap();
-        writeln!(UART, "A:\r").unwrap();
-        for d in &a.read() {
-            writeln!(UART, " - {:?}\r", d).unwrap();
+        writeln!(UART, "BME: {:?}\r", bme.read())?;
+        writeln!(UART, "A:\r")?;
+
+        for d in &a.read()? {
+            writeln!(UART, " - {:?}\r", d)?;
         }
-        writeln!(UART, "O:\r").unwrap();
-        for d in &o.read() {
-            writeln!(UART, " - {:?}\r", d).unwrap();
+
+        writeln!(UART, "O:\r")?;
+        for d in &o.read()? {
+            writeln!(UART, " - {:?}\r", d)?;
         }
-        writeln!(UART, "G:\r").unwrap();
-        for d in &g.read() {
-            writeln!(UART, " - {:?}\r", d).unwrap();
+
+        writeln!(UART, "G:\r")?;
+        for d in &g.read()? {
+            writeln!(UART, " - {:?}\r", d)?;
         }
+
         display.clear(Color::yellow());
         display.print(160 - t, 10, b"Hello Rust\0", Color::white(), Color::black());
 
@@ -49,8 +62,41 @@ fn main() {
         if b.right_top() {
             display.print(80, 30, b"Reset\0", Color::red(), Color::black());
         }
-        writeln!(UART, "Light: {:?}\r", light.get()).unwrap();
-        
+        writeln!(UART, "Light: {:?}\r", light.get())?;
+
         display.update();
+    }
+
+    Ok(())
+}
+
+// -----------------------------------------------------------------------------
+// Error
+// -----------------------------------------------------------------------------
+
+#[derive(Debug)]
+pub enum Error {
+    UartWriteFailed(fmt::Error),
+    SensorInteractionFailed(BHI160Error),
+}
+
+impl From<fmt::Error> for Error {
+    fn from(error: fmt::Error) -> Self {
+        Error::UartWriteFailed(error)
+    }
+}
+
+impl From<BHI160Error> for Error {
+    fn from(error: BHI160Error) -> Self {
+        Error::SensorInteractionFailed(error)
+    }
+}
+
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Error::UartWriteFailed(error) => error.fmt(f),
+            Error::SensorInteractionFailed(error) => error.fmt(f),
+        }
     }
 }

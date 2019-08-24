@@ -1,8 +1,10 @@
-use core::mem::uninitialized;
-use core::marker::PhantomData;
-use super::bindings::*;
+use core::{
+    fmt::{self, Display, Write},
+    marker::PhantomData,
+    mem::MaybeUninit,
+};
 
-use core::fmt::Write;
+use crate::{bindings::*, errno};
 
 pub trait SensorType {
     /// sensor_type in C, sensor_id in Python
@@ -48,43 +50,64 @@ pub struct Sensor<S: SensorType> {
 }
 
 impl<S: SensorType> Sensor<S> {
-    pub fn start() -> Self {
+    fn new(stream_id: i32) -> Self {
+        Self {
+            stream_id,
+            _kind: PhantomData,
+        }
+    }
+
+    pub fn start() -> Result<Self, Error> {
         let mut cfg = bhi160_sensor_config {
             sample_buffer_len: 200,
             sample_rate: 4,
             dynamic_range: 2,
             _padding: [0u8; 8],
         };
-        let stream_id = unsafe {
-            epic_bhi160_enable_sensor(S::sensor_type(), &mut cfg)
-        };
-        Sensor {
-            stream_id,
-            _kind: PhantomData,
+
+        let stream_id = unsafe { epic_bhi160_enable_sensor(S::sensor_type(), &mut cfg) };
+        if stream_id < 0 {
+            let error = match -stream_id {
+                errno::EBUSY => Error::DriverBusy,
+                _ => Error::Unknown(stream_id),
+            };
+
+            return Err(error);
         }
+
+        Ok(Sensor::new(stream_id))
     }
 
-    pub fn read(&self) -> SensorData<S> {
-        let mut buf: [bhi160_data_vector; DATA_MAX] = unsafe {
-            uninitialized()
-        };
-        let n = unsafe {
-            epic_stream_read(self.stream_id, buf.as_mut_ptr() as *mut _, buf.len())
-        };
-        if n < 0 {
-            panic!("epic_stream_read fail");
+    pub fn read(&self) -> Result<SensorData<S>, Error> {
+        let mut buffer = MaybeUninit::<[bhi160_data_vector; DATA_MAX]>::zeroed();
+        let buffer_pointer = buffer.as_mut_ptr() as *mut _;
+
+        let packet_count = unsafe { epic_stream_read(self.stream_id, buffer_pointer, DATA_MAX) };
+        if packet_count < 0 {
+            let error = match -packet_count {
+                errno::ENODEV => Error::SensorUnavailable,
+                errno::EBADF => Error::SensorDescriptorUnknown,
+                errno::EINVAL => Error::InvalidSampleCount,
+                errno::EBUSY => Error::CouldNotAcquireLock,
+                _ => Error::Unknown(packet_count),
+            };
+
+            return Err(error);
         }
-        let n = n as usize;
-        SensorData {
-            buf, n,
+
+        Ok(SensorData {
+            buf: unsafe { buffer.assume_init() },
+            n: packet_count as usize,
             _kind: PhantomData,
-        }
+        })
     }
 }
 
 impl<S: SensorType> Drop for Sensor<S> {
     fn drop(&mut self) {
-        unsafe { epic_bhi160_disable_sensor(S::sensor_type()); }
+        unsafe {
+            epic_bhi160_disable_sensor(S::sensor_type());
+        }
     }
 }
 
@@ -97,11 +120,9 @@ pub struct SensorData<S> {
 impl<'a, S: SensorType> IntoIterator for &'a SensorData<S> {
     type Item = SensorDataItem;
     type IntoIter = SensorDataIter<'a, S>;
+
     fn into_iter(self) -> Self::IntoIter {
-        SensorDataIter {
-            data: self,
-            pos: 0,
-        }
+        SensorDataIter { data: self, pos: 0 }
     }
 }
 
@@ -112,22 +133,27 @@ pub struct SensorDataIter<'a, S> {
 
 impl<'a, S: SensorType> Iterator for SensorDataIter<'a, S> {
     type Item = SensorDataItem;
+
     fn next(&mut self) -> Option<Self::Item> {
         while self.pos < self.data.n {
-            let vec = &self.data.buf[self.pos];
             self.pos += 1;
-            if vec.data_type == DATA_TYPE_VECTOR {
-                let item = SensorDataItem {
-                    x: S::convert_single(vec.x),
-                    y: S::convert_single(vec.y),
-                    z: S::convert_single(vec.z),
-                    status: vec.status,
-                };
-                return Some(item);
-            } else {
-                writeln!(crate::UART, "Sensor: skip type {}\r", vec.data_type).unwrap();
+
+            let vec = &self.data.buf[self.pos];
+            if vec.data_type != DATA_TYPE_VECTOR {
+                writeln!(crate::UART, "Sensor: skip type {}\r", vec.data_type).ok();
+                continue;
             }
+
+            let item = SensorDataItem {
+                x: S::convert_single(vec.x),
+                y: S::convert_single(vec.y),
+                z: S::convert_single(vec.z),
+                status: vec.status,
+            };
+
+            return Some(item);
         }
+
         None
     }
 }
@@ -152,3 +178,38 @@ pub struct bhi160_data_vector {
 }
 
 const DATA_TYPE_VECTOR: u8 = 0;
+
+// -----------------------------------------------------------------------------
+// BHI160 Error
+// -----------------------------------------------------------------------------
+
+#[derive(Debug)]
+pub enum Error {
+    /// The descriptor table lock could not be acquired.
+    CouldNotAcquireLock,
+    /// The BHI160 driver is currently busy with other tasks and could not be
+    /// acquired for enabling a sensor.
+    DriverBusy,
+    /// The requested sample `count` is not a multiple of the sensor's sample
+    /// size.
+    InvalidSampleCount,
+    /// The given sensor descriptor is unknown.
+    SensorDescriptorUnknown,
+    /// Sensor is not currently available.
+    SensorUnavailable,
+    /// Not yet documented and therefore unknown error types.
+    Unknown(i32),
+}
+
+impl Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Error::CouldNotAcquireLock => writeln!(f, "Could not acquire BHI160 lock."),
+            Error::DriverBusy => writeln!(f, "The BHI160 Driver is busy."),
+            Error::InvalidSampleCount => writeln!(f, "Sample couldn't invalid."),
+            Error::SensorDescriptorUnknown => writeln!(f, "Unknown BHI160 sensor descriptor."),
+            Error::SensorUnavailable => writeln!(f, "The BHI160 sensor is currently unavailable."),
+            Error::Unknown(id) => writeln!(f, "Unknown error id: {}", id),
+        }
+    }
+}
