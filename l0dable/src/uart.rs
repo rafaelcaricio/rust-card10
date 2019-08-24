@@ -20,7 +20,7 @@ macro_rules! print {
 #[macro_export]
 macro_rules! println {
     () => ($crate::print!("\r"));
-    ($($arg:tt)*) => ($crate::print!("{}\r", format_args!($($arg)*)));
+    ($($arg:tt)*) => ($crate::print!("{}\r\n", format_args!($($arg)*)));
 }
 
 #[doc(hidden)]
