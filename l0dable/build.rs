@@ -42,7 +42,7 @@ fn main() {
         .file("../c/lib/gfx/Fonts/font24.c")
         .file("../c/lib/gfx/Fonts/font8.c")
         .compile("card10");
-    println!("cargo:rerun-if-changed=src/client.rs");
+    println!("cargo:rerun-if-changed=src/client.c");
 
     // Generate bindings to C code
     let bindings = bindgen::Builder::default()
