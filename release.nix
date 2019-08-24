@@ -4,13 +4,27 @@
 with pkgs;
 
 let
+  versionSuffix =
+    if jailbreak
+    then "-jailbreak"
+    else "";
   cSrc = stdenv.mkDerivation {
     name = "card10-src";
-    src = ./c;
+    src = ./.;
     phases = [ "unpackPhase" "patchPhase" "installPhase" ];
+    nativeBuildInputs = [ git ];
+    prePatch = "cd c";
     patches = [
       ./0001-feat-nix-add-jailbreak-arg.patch
     ];
+    postPatch = ''
+      VERSION="$(git describe --always)${versionSuffix}"
+      GITHASH="$(git rev-parse HEAD)"
+
+      substituteInPlace tools/version-header.sh \
+        --replace "\$VERSION" "$VERSION" \
+        --replace "\$GITHASH" "$GITHASH"
+    '';
     installPhase = ''
       cp -ar . $out
     '';
