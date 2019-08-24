@@ -30,6 +30,17 @@ impl<'d> FrameBuffer<'d> {
         }
     }
 
+    pub fn clear(&mut self, color: RawColor) {
+        for y in 0..Display::H {
+            for x in 0..Display::W {
+                let bytes: &mut RawColor = unsafe {
+                    transmute(&mut self.buffer.fb[y as usize][x as usize])
+                };
+                *bytes = color;
+            }
+        }
+    }
+
     pub fn text<'a, 'f>(&'a mut self, x: isize, y: isize, font: &'f Font, color: RawColor) -> TextRenderer<'a, 'd, 'f> {
         TextRenderer {
             framebuffer: self,
