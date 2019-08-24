@@ -4,7 +4,6 @@ let
 in
 with pkgs;
 let
-  openocd = callPackage ./openocd.nix {};
   rust = rustChannelOfTargets "nightly" null [ "thumbv7em-none-eabi" ];
   rustPlatform = makeRustPlatform {
     rustc = rust;

@@ -10,7 +10,6 @@ stdenv.mkDerivation {
     glibc_multi
     rust
     pkgsCross.arm-embedded.stdenv.cc
-    openocd
   ];
 
   LIBCLANG_PATH="${llvmPackages.libclang}/lib";
