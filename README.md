@@ -1,5 +1,16 @@
 # Rust support for the card10 CCCamp19 badge
 
+## Prebuilt binaries
+
+By courtesy of this Gitlab's CI system, and NixOS, we build `.elf`
+files for you drop into the `apps/` directory of your card10 badge.
+
+Because running ELF binaries requires a jailbroken base firmware
+starting with v1.5, we build this one too. It includes this project's
+Rust binaries.
+
+https://git.card10.badge.events.ccc.de/astro/rust-card10/-/jobs
+
 ## Prerequisites
 
 You need rust nightly and a working setup to compile the card10
