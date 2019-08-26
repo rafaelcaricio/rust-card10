@@ -1,3 +1,3 @@
-[submodule "c"]
-	path = c
+[submodule "card10-sys/firmware"]
+	path = card10-sys/firmware
 	url = https://git.card10.badge.events.ccc.de/card10/firmware.git

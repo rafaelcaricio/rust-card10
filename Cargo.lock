@@ -88,6 +88,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "card10-sys"
+version = "0.1.0"
+dependencies = [
+ "bindgen 0.51.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cc 1.0.37 (registry+https://github.com/rust-lang/crates.io-index)",
+ "panic-abort 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "r0 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
 name = "cc"
 version = "1.0.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
