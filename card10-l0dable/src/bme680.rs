@@ -1,5 +1,5 @@
+use card10_sys::*;
 use core::mem::uninitialized;
-use super::bindings::*;
 
 pub struct BME680;
 pub type SensorData = bme680_sensor_data;
@@ -24,6 +24,8 @@ impl BME680 {
 
 impl Drop for BME680 {
     fn drop(&mut self) {
-        unsafe { epic_bme680_deinit(); }
+        unsafe {
+            epic_bme680_deinit();
+        }
     }
 }

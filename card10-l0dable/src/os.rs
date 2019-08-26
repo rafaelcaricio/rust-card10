@@ -1,4 +1,4 @@
-use super::bindings::*;
+use card10_sys::*;
 
 pub fn exec(path: &str) -> ! {
     let mut pathbuf = super::str_to_cstr(path);

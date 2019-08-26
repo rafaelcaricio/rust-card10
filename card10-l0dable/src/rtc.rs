@@ -1,5 +1,5 @@
+use card10_sys::*;
 use core::ops::Sub;
-use super::bindings::*;
 
 pub trait Time {
     fn time() -> Self;

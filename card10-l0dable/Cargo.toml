@@ -14,20 +14,8 @@ keywords = [
     "l0dable",
 ]
 categories = ["no-std"]
-description = """
-make l0dables for the Card10 (CCCamp 2019) badge
-"""
-include = [
-    "**/*.rs",
-    "Cargo.toml",
-    "l0dable.ld",
-    "../c/",
-]
+description = "make l0dables for the Card10 (CCCamp 2019) badge"
 
 [dependencies]
-r0 = "0.2"
-panic-abort = "0.3"
+card10-sys = { path = "../card10-sys", version = "^0.1" }
 
-[build-dependencies]
-cc = "1.0"
-bindgen = "0.51"

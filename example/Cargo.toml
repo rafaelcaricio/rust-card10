@@ -5,7 +5,7 @@ version = "0.0.0"
 authors = ["Astro <astro@spaceboyz.net>"]
 
 [dependencies]
-card10-l0dable = { path = "../l0dable" }
+card10-l0dable = { path = "../card10-l0dable" }
 
 [build-dependencies]
 cc = "1.0"

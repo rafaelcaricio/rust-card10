@@ -1,7 +1,7 @@
 [workspace]
 members = [
   "card10-sys",
-  "l0dable",
+  "card10-l0dable",
   "example",
   "rkanoid",
 ]

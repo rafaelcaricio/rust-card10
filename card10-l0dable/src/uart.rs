@@ -1,5 +1,6 @@
-use super::bindings::*;
 use core::fmt::Write;
+
+use card10_sys::*;
 
 pub struct Uart;
 

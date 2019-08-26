@@ -9,20 +9,6 @@ use panic_abort as _;
 global_asm!(include_str!(concat!(env!("OUT_DIR"), "/crt.s")));
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
-/// Type check the user-supplied entry function.
-#[macro_export]
-macro_rules! main {
-    ($path:path) => {
-        #[export_name = "main"]
-        pub unsafe fn __main() {
-            // type check the given path
-            let f: fn() = $path;
-
-            f()
-        }
-    };
-}
-
 #[link_section = ".text.boot"]
 #[no_mangle]
 pub unsafe extern "C" fn Reset_Handler() -> ! {

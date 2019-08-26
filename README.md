@@ -74,25 +74,25 @@ extension (e.g `example` must be renamed as `example.elf`).
 
 ## Crates
 
-| Crate    | Description                                               |
-| ----     | ---                                                       |
-| l0dable  | Helper crate for building l0dables                        |
-| example  | l0dable example                                           |
-| rkanoid  | Arkanoid clone                                            |
+| Crate           | Description                                               |
+| ----            | ---                                                       |
+| card10-l0dable  | Helper crate for building l0dables                        |
+| example         | l0dable example                                           |
+| rkanoid         | Arkanoid clone                                            |
 
 
 ## Misc
 
 ### How to update the firmware bindings
 
-1) Update the `c/` submodule to the latest firmware state.
+1) Update the `card10-sys/firmware` submodule to the latest firmware state.
 
 2) Rebuild the firmware as described above.
 
 3) Run the following script from the project root directory
 
    ```shell
-   python c/epicardium/api/genapi.py -H c/epicardium/epicardium.h -c l0dable/src/client.c -s l0dable/src/server.c
+   python card10-sys/firmware/epicardium/api/genapi.py -H card10-sys/firmware/epicardium/epicardium.h -c card10-sys/vendor/client.c -s card10-sys/vendor/server.c
    ```
 
 4) Rebuild your app :)

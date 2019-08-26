@@ -1,7 +1,7 @@
+use crate::Display;
+use card10_sys::*;
 use core::mem::{transmute, uninitialized};
 use core::ops::{Index, IndexMut};
-use crate::bindings::*;
-use crate::Display;
 
 mod font;
 pub use font::*;
@@ -13,14 +13,11 @@ pub struct FrameBuffer<'d> {
     buffer: disp_framebuffer,
 }
 
-
 impl<'d> FrameBuffer<'d> {
     pub fn uninitialized(display: &'d Display) -> Self {
         FrameBuffer {
             _display: display,
-            buffer: unsafe {
-                uninitialized()
-            },
+            buffer: unsafe { uninitialized() },
         }
     }
 
@@ -33,18 +30,26 @@ impl<'d> FrameBuffer<'d> {
     pub fn clear(&mut self, color: RawColor) {
         for y in 0..Display::H {
             for x in 0..Display::W {
-                let bytes: &mut RawColor = unsafe {
-                    transmute(&mut self.buffer.fb[y as usize][x as usize])
-                };
+                let bytes: &mut RawColor =
+                    unsafe { transmute(&mut self.buffer.fb[y as usize][x as usize]) };
                 *bytes = color;
             }
         }
     }
 
-    pub fn text<'a, 'f>(&'a mut self, x: isize, y: isize, font: &'f Font, color: RawColor) -> TextRenderer<'a, 'd, 'f> {
+    pub fn text<'a, 'f>(
+        &'a mut self,
+        x: isize,
+        y: isize,
+        font: &'f Font,
+        color: RawColor,
+    ) -> TextRenderer<'a, 'd, 'f> {
         TextRenderer {
             framebuffer: self,
-            x, y, font, color,
+            x,
+            y,
+            font,
+            color,
         }
     }
 }
@@ -54,9 +59,7 @@ impl<'d> Index<(u16, u16)> for FrameBuffer<'d> {
     fn index(&self, (x, y): (u16, u16)) -> &Self::Output {
         let x = usize::from(Display::W - 1 - x);
         let y = usize::from(Display::H - 1 - y);
-        unsafe {
-            transmute(&self.buffer.fb[y][x])
-        }
+        unsafe { transmute(&self.buffer.fb[y][x]) }
     }
 }
 
@@ -64,9 +67,7 @@ impl<'d> IndexMut<(u16, u16)> for FrameBuffer<'d> {
     fn index_mut(&mut self, (x, y): (u16, u16)) -> &mut Self::Output {
         let x = usize::from(Display::W - 1 - x);
         let y = usize::from(Display::H - 1 - y);
-        unsafe {
-            transmute(&mut self.buffer.fb[y][x])
-        }
+        unsafe { transmute(&mut self.buffer.fb[y][x]) }
     }
 }
 
