@@ -1,5 +1,5 @@
-use core::fmt::Write;
 use super::bindings::*;
+use core::fmt::Write;
 
 pub struct Uart;
 
@@ -25,6 +25,5 @@ macro_rules! println {
 
 #[doc(hidden)]
 pub fn _print(args: core::fmt::Arguments) {
-    use core::fmt::Write;
     crate::UART.write_fmt(args);
 }
