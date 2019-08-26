@@ -51,7 +51,7 @@ https://firmware.card10.badge.events.ccc.de/how-to-build.html this
 should work as following:
 
 ```shell
-cd c/
+cd card10-sys/firmware
 ./bootstrap -Djailbreak_card10=true
 ninja -C build/
 ```

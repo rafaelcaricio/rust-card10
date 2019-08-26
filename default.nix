@@ -11,7 +11,7 @@ let
   };
   epic-stubs = stdenv.mkDerivation {
     name = "epic-stubs";
-    src = ./c;
+    src = ./card10-sys/firmware;
     buildInputs = [ gcc python3 ];
     buildPhase = ''
       ${python3}/bin/python epicardium/api/genapi.py -H epicardium/epicardium.h -c client.c -s server.c
@@ -28,7 +28,7 @@ let
     cargoSha256 = "10nims5j9r0d7pcfbbj8ycqxhcx7n07958jvkib29b0sf9c6qh3z";
     buildInputs = [ pkgsCross.arm-embedded.stdenv.cc ];
     prePatch = ''
-      cp ${epic-stubs}/client.c l0dable/src/
+      cp ${epic-stubs}/client.c card10-sys/vendor/
     '';
     NIX_DEBUG=1;
     LIBCLANG_PATH="${llvmPackages.libclang}/lib";

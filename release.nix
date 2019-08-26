@@ -13,7 +13,7 @@ let
     src = ./.;
     phases = [ "unpackPhase" "patchPhase" "installPhase" ];
     nativeBuildInputs = [ git ];
-    prePatch = "cd c";
+    prePatch = "cd card10-sys/firmware";
     patches = [
       ./0001-feat-nix-add-jailbreak-arg.patch
     ];
