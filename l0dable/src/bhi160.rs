@@ -136,8 +136,6 @@ impl<'a, S: SensorType> Iterator for SensorDataIter<'a, S> {
 
     fn next(&mut self) -> Option<Self::Item> {
         while self.pos < self.data.n {
-            self.pos += 1;
-
             let vec = &self.data.buf[self.pos];
             if vec.data_type != DATA_TYPE_VECTOR {
                 writeln!(crate::UART, "Sensor: skip type {}\r", vec.data_type).ok();
@@ -150,6 +148,8 @@ impl<'a, S: SensorType> Iterator for SensorDataIter<'a, S> {
                 z: S::convert_single(vec.z),
                 status: vec.status,
             };
+
+            self.pos += 1;
 
             return Some(item);
         }
