@@ -1,13 +1,16 @@
 use super::bindings::*;
 
-pub struct LightSensor;
+pub struct LightSensor {
+    // Prevent creation of this struct by all but this module.
+    _private: (),
+}
 
 impl LightSensor {
     pub fn start() -> Self {
         if unsafe { epic_light_sensor_run() } != 0 {
             panic!("Cannot start light sensor");
         }
-        LightSensor
+        LightSensor { _private: () }
     }
 
     pub fn get(&self) -> Option<u16> {
