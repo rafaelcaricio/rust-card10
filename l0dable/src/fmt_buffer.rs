@@ -37,7 +37,7 @@ impl<'a> fmt::Write for FmtBuffer<'a> {
     }
 }
 
-/// 256 bytes ought to be enough for any string
+/// 255 bytes ought to be enough for any C string
 pub fn str_to_cstr(s: &str) -> [u8; 256] {
     let mut buf: [u8; 256] = unsafe { uninitialized() };
     let mut fmt = FmtBuffer::new(buf.as_mut());
