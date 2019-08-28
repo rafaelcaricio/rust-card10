@@ -160,10 +160,10 @@ impl<'a, S: SensorType> Iterator for SensorDataIter<'a, S> {
 
 #[derive(Debug, Clone)]
 pub struct SensorDataItem {
-    x: f32,
-    y: f32,
-    z: f32,
-    status: u8,
+    pub x: f32,
+    pub y: f32,
+    pub z: f32,
+    pub status: u8,
 }
 
 #[repr(C)]
