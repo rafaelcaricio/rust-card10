@@ -61,9 +61,62 @@ And then copy `build/pycardium/pycardium_epicardium.bin` as
 
 ## Build and run Rust loadables
 
+### Setup
+
+If you want to come up with your own rust based loadable crate a few
+preparations are required:
+
+  - Setup the new crate repository.
+ 
+  - Add `card10-l0dable = "^0.1"` as a dependency to your new crate.
+ 
+  - Change the configuration of the default cargo release profile inside your
+    `Cargo.toml` file:
+ 
+    ```
+    [profile.release]
+    opt-level = "s"
+    panic = "abort"
+    ```
+
+  - Create (or update) the `thumbv7em-none-eabi` target configuration at
+    `$PROJECT/.cargo/config` with the following rustflags:
+ 
+    ```
+    [target.thumbv7em-none-eabi]
+    rustflags = [
+      "-C", "linker=arm-none-eabi-gcc",
+      "-C", "link-args=-Tl0dable.ld -n -pie -fPIC",
+      "-C", "relocation-model=pic",
+    ]
+
+    [build]
+    target = "thumbv7em-none-eabi"
+    ```
+
+  - Ensure that your crate is marked as a `non_std` project and make
+    `card10-l0dable` aware of your custom main function. This should require
+    the following update to your `main.rs` file.
+
+    ```main.rs
+    #![no_std]
+    #![no_main]
+
+    use card10_l0dable::main;
+
+    main!(main);
+    fn main() {}
+    ```
+
+### Compilation
+
+To compile the project use the nightly toolchain and define the proper target.
+
 ```shell
 cargo +nightly build --release --target thumbv7em-none-eabi
 ```
+
+### Transfer to card10
 
 Then copy the resulting executable from the target directory 
 `target/thumbv7em-none-eabi/release/example` into the
