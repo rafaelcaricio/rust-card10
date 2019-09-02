@@ -1,24 +1,16 @@
 { pkgs ? import <nixpkgs> {},
-  jailbreak ? true,
 }:
 with pkgs;
 
 let
-  versionSuffix =
-    if jailbreak
-    then "-jailbreak"
-    else "";
   cSrc = stdenv.mkDerivation {
     name = "card10-src";
     src = ./.;
     phases = [ "unpackPhase" "patchPhase" "installPhase" ];
     nativeBuildInputs = [ git ];
     prePatch = "cd c";
-    patches = [
-      ./0001-feat-nix-add-jailbreak-arg.patch
-    ];
     postPatch = ''
-      VERSION="$(git describe --always)${versionSuffix}"
+      VERSION="$(git describe --always)"
       GITHASH="$(git rev-parse HEAD)"
 
       substituteInPlace tools/version-header.sh \
@@ -29,7 +21,7 @@ let
       cp -ar . $out
     '';
   };
-  cFirmware = import "${cSrc}" { inherit pkgs jailbreak; };
+  cFirmware = import "${cSrc}";
   rustL0dables = (import ./default.nix).l0dables;
   release = stdenv.mkDerivation {
     name = "card10-firmware";
