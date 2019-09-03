@@ -1,3 +1,5 @@
+/// Enviromental sensor
+
 use card10_sys::*;
 use core::mem::uninitialized;
 

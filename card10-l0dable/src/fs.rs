@@ -1,3 +1,5 @@
+//! File System support (unfinished)
+
 use core::mem::uninitialized;
 use core::str::from_utf8_unchecked;
 

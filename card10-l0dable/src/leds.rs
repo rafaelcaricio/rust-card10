@@ -1,3 +1,5 @@
+//! Lights
+
 use card10_sys::*;
 
 #[derive(Clone, Copy)]
@@ -6,6 +8,9 @@ pub enum LEDColor {
     HSV(f32, f32, f32),
 }
 
+/// Update all RGB LEDs
+///
+/// `f` must supply a `LEDColor` for `0..=10`.
 pub fn update_rgb_leds<F>(f: F)
 where
     F: Fn(i32) -> LEDColor,

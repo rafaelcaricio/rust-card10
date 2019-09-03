@@ -84,12 +84,14 @@ pub enum Font {
     Font24 = disp_font_name_DISP_FONT24 as u8,
 }
 
+/// Immediate mode routines
 impl Display {
     pub const W: u16 = 160;
     pub const H: u16 = 80;
     pub const FONT_W: u16 = 14;
     pub const FONT_H: u16 = 20;
 
+    /// Open the display, return an instance
     pub fn open() -> Self {
         unsafe {
             epic_disp_open();
@@ -97,18 +99,22 @@ impl Display {
         Display
     }
 
+    /// Write Epicardium's framebuffer to the display
     pub fn update(&self) {
         unsafe {
             epic_disp_update();
         }
     }
 
+    /// Clear everything with a solid `color`
     pub fn clear(&self, color: Color) {
         unsafe {
             epic_disp_clear(color.0);
         }
     }
 
+    /// Print text
+    ///
     /// s must be 0-terminated
     pub fn print(&self, x: u16, y: u16, s: &[u8], fg: Color, bg: Color) {
         unsafe {
@@ -116,6 +122,8 @@ impl Display {
         }
     }
 
+    /// Print text with a selected font
+    ///
     /// s must be 0-terminated
     pub fn print_adv(&self, font: Font, x: u16, y: u16, s: &[u8], fg: Color, bg: Color) {
         unsafe {
@@ -123,12 +131,14 @@ impl Display {
         }
     }
 
+    /// Set a pixel
     pub fn pixel(&self, x: u16, y: u16, color: Color) {
         unsafe {
             epic_disp_pixel(x, y, color.0);
         }
     }
 
+    /// Draw a line
     pub fn line(
         &self,
         x1: u16,
@@ -159,6 +169,7 @@ impl Display {
         }
     }
 
+    /// Draw a circle
     pub fn circ(
         &self,
         x: u16,
@@ -173,6 +184,10 @@ impl Display {
         }
     }
 
+    /// Obtain a handle for a framebuffer.
+    ///
+    /// Don't use `display.send()` but `framebuffer.send()` as long as
+    /// it is in use.
     pub fn framebuffer<'d>(&'d self) -> FrameBuffer<'d> {
         FrameBuffer::uninitialized(self)
     }
@@ -186,6 +201,8 @@ impl Drop for Display {
     }
 }
 
+/// Convenience text display
+///
 /// Requires `card10_alloc::init()` and `extern crate alloc;`
 #[macro_export]
 macro_rules! display {
@@ -203,6 +220,8 @@ macro_rules! display {
     });
 }
 
+/// Convenience text display with selected font
+///
 /// Requires `card10_alloc::init()` and `extern crate alloc;`
 #[macro_export]
 macro_rules! display_adv {

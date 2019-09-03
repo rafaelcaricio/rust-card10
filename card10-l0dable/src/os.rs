@@ -1,5 +1,6 @@
 use card10_sys::*;
 
+/// Execute Python script or ELF file
 pub fn exec(path: &str) -> ! {
     let mut pathbuf = super::str_to_cstr(path);
     unsafe {
@@ -8,6 +9,7 @@ pub fn exec(path: &str) -> ! {
     unreachable!()
 }
 
+/// Exit current l0dable
 pub fn exit(ret: i32) -> ! {
     unsafe {
         epic_exit(ret);
@@ -15,6 +17,7 @@ pub fn exit(ret: i32) -> ! {
     unreachable!()
 }
 
+/// Cause a reboot
 pub fn system_reset() -> ! {
     unsafe {
         epic_system_reset();

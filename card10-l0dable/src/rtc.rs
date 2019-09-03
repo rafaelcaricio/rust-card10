@@ -1,8 +1,13 @@
+//! Real-time clock functionality
+
 use card10_sys::*;
 use core::ops::Sub;
 
+/// Implemented for `Seconds` and `Milliseconds`
 pub trait Time {
+    /// Get current time
     fn time() -> Self;
+    /// Set the time (TODO)
     fn set_time(&self);
 }
 
@@ -20,8 +25,8 @@ impl Time for Seconds {
         let s = unsafe { epic_rtc_get_seconds() };
         Seconds(s)
     }
+    /// TODO
     fn set_time(&self) {
-        // TODO
     }
 }
 
@@ -46,8 +51,8 @@ impl Time for MilliSeconds {
         let ms = unsafe { epic_rtc_get_milliseconds() };
         MilliSeconds(ms)
     }
+    /// TODO
     fn set_time(&self) {
-        // TODO
     }
 }
 

@@ -2,6 +2,10 @@ use core::fmt::Write;
 
 use card10_sys::*;
 
+/// USB UART, 115200 baud
+///
+/// Supports use of `write!(Uart, "{}", ...);` Use `println!(...);`
+/// for convenience.
 pub struct Uart;
 
 impl Write for Uart {

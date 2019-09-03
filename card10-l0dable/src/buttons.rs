@@ -1,10 +1,12 @@
 use card10_sys::*;
 
+/// Button inputs
 pub struct Buttons {
     state: u32,
 }
 
 impl Buttons {
+    /// Read the current button state
     pub fn read() -> Self {
         let mask = epic_button_BUTTON_LEFT_BOTTOM
             | epic_button_BUTTON_RIGHT_BOTTOM

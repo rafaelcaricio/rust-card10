@@ -1,3 +1,4 @@
+//! [Repository](https://git.card10.badge.events.ccc.de/astro/rust-card10)
 #![no_std]
 
 mod os;

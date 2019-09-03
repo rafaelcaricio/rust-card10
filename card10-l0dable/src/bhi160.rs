@@ -1,3 +1,5 @@
+/// Accelerometer, Gyroscope, Orientation
+
 use core::{
     fmt::{self, Display, Write},
     marker::PhantomData,
@@ -53,6 +55,10 @@ pub struct Sensor<S: SensorType> {
 }
 
 impl<S: SensorType> Sensor<S> {
+    /// Use one of:
+    /// - `BHI160::<Accelerometer>::start()`
+    /// - `BHI160::<Gyroscope>::start()`
+    /// - `BHI160::<Orientation>::start()`
     fn new(stream_id: i32) -> Self {
         Self {
             stream_id,
