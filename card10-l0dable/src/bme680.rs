@@ -7,7 +7,7 @@ pub type SensorData = bme680_sensor_data;
 impl BME680 {
     pub fn start() -> Self {
         if unsafe { epic_bme680_init() } != 0 {
-            panic!("Cannot start light sensor");
+            panic!("Cannot start BME680 sensor");
         }
         BME680
     }
