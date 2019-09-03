@@ -29,6 +29,27 @@ keywords = [
     "l0dable",
 ]
 
+exclude = [
+    "target",
+    "firmware/lib/micropython",
+    "firmware/lib/ff13",
+    "firmware/lib/sdk/Documentation",
+    "firmware/lib/sdk/Applications",
+    "firmware/lib/sdk/Libraries/BTLE",
+    "firmware/lib/sdk/Libraries/FreeRTOS",
+    "firmware/lib/sdk/Libraries/FreeRTOS-Plus",
+    "firmware/lib/sdk/Libraries/SDHC",
+    "firmware/lib/sdk/Libraries/MAXUSB",
+    "firmware/openocd",
+    "firmware/Documentation",
+    "firmware/hw-tests",
+    "firmware/preload",
+    "firmware/pycardium",
+    "firmware/bootloader",
+    "firmware/tools",
+    "firmware/docker",
+]
+
 [package.metadata.docs.rs]
 default-target = "thumbv7em-none-eabi"
 
