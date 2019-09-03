@@ -32,6 +32,10 @@ let
       cp -r ${cFirmware}/card10/* $out/
       chmod u+w $out/apps
       cp ${rustL0dables}/apps/* $out/apps/
+
+      cat << EOF > $out/card10.cfg
+      execute_elf=true
+      EOF
     '';
   };
 in release
