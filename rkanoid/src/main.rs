@@ -165,6 +165,8 @@ enum GameResult {
 fn game(level: u16, mut score: u32) -> GameResult {
     let start_time = Seconds::time();
     let display = Display::open();
+    let accel = BHI160::<Accelerometer>::start().unwrap();
+    let mut accel_x = 0;
 
     let mut paddle = Display::W / 2;
     let paddle_size = 18 - (2 * level).min(14);
@@ -173,17 +175,25 @@ fn game(level: u16, mut score: u32) -> GameResult {
     let mut ball_direction = Direction::UR;
     let mut blocks = Blocks::generate((0x3F + 0x10 * level).min(0xff) as u8);
     for tick in 0.. {
+        for data in &accel.read().unwrap() {
+            accel_x = (17.0 * data.get_x()) as i32;
+        }
         let input = Buttons::read();
         let old_paddle = paddle;
         if input.left_bottom() {
-            paddle -= PADDLE_SPEED;
-            paddle = paddle.max(paddle_size);
+            paddle = paddle.saturating_sub(PADDLE_SPEED);
         }
         if input.right_bottom() {
             paddle += PADDLE_SPEED;
-            paddle = paddle.min(Display::W - paddle_size)
         }
-        let paddle_moving = paddle != old_paddle;
+        if accel_x < 0 {
+            paddle = paddle.saturating_sub(-accel_x as u16);
+        } else if accel_x > 0 {
+            paddle += accel_x as u16;
+        }
+        paddle = paddle
+            .max(paddle_size)
+            .min(Display::W - paddle_size);
         if input.left_top() {
             exit(0);
         }
@@ -210,10 +220,10 @@ fn game(level: u16, mut score: u32) -> GameResult {
                 ball_x >= paddle - paddle_size &&
                 ball_x <= paddle + paddle_size {
                     // Bounce on paddle
-                    if paddle_moving && input.left_bottom() {
+                    if paddle < old_paddle {
                         ball_direction = Direction::UL;
                         vibra::vibrate(50);
-                    } else if paddle_moving && input.right_bottom() {
+                    } else if paddle > old_paddle {
                         ball_direction = Direction::UR;
                         vibra::vibrate(50);
                     } else {
