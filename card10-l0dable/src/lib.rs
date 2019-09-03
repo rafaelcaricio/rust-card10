@@ -25,6 +25,8 @@ pub use bhi160::{
     SensorData as BHI160Data,
 };
 pub mod fs;
+mod leds;
+pub use leds::*;
 
 /// Type check the user-supplied entry function.
 #[macro_export]
