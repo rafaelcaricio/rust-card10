@@ -1,6 +1,7 @@
 #![no_std]
 #![no_main]
 
+extern crate alloc;
 use core::fmt::Write;
 use card10_l0dable::*;
 
@@ -291,10 +292,10 @@ fn game(level: u16, mut score: u32) -> GameResult {
 fn title_screen() {
     let display = Display::open();
     display.clear(Color::red());
-    display.print(30, 15, b"Rkanoid\0", Color::white(), Color::red());
-    display.print(30, 30, b"in Rust\0", Color::white(), Color::red());
-    display.print(20, 45, b"by Astro\0", Color::white(), Color::red());
-    display.print(Display::W - 2 * Display::FONT_W, Display::H - Display::FONT_H, b"Go\0", Color::yellow(), Color::blue());
+    display!(display, 30, 15, Color::white(), Color::red(), "Rkanoid");
+    display!(display, 30, 30, Color::white(), Color::red(), "in Rust");
+    display!(display, 20, 45, Color::white(), Color::red(), "by Astro");
+    display!(display, Display::W - 2 * Display::FONT_W, Display::H - Display::FONT_H, Color::yellow(), Color::blue(), "Go");
     display.update();
     while !Buttons::read().right_bottom() {}
 }
@@ -302,13 +303,11 @@ fn title_screen() {
 fn game_over(score: u32) -> bool {
     let display = Display::open();
     display.clear(Color::red());
-    display.print(30, 0, b"Rkanoid\0", Color::white(), Color::red());
-    display.print(0, 25, b"Game over!\0", Color::white(), Color::red());
-    let mut score_str = [0u8; 32];
-    write!(FmtBuffer::new(&mut score_str), "Score {}\0", score).unwrap();
-    display.print(0, 60, &score_str, Color::white(), Color::red());
-    display.print(0, 0, b"Q\0", Color::yellow(), Color::blue());
-    display.print(Display::W - Display::FONT_W, Display::H - 2 * Display::FONT_H, b"S\0", Color::yellow(), Color::blue());
+    display!(display, 30, 0, Color::white(), Color::red(), "Rkanoid");
+    display!(display, 0, 25, Color::white(), Color::red(), "Game over!");
+    display!(display, 0, 60, Color::white(), Color::red(), "Score {}", score);
+    display!(display, 0, 0, Color::yellow(), Color::blue(), "Q");
+    display!(display, Display::W - Display::FONT_W, Display::H - 2 * Display::FONT_H, Color::yellow(), Color::blue(), "S");
     display.update();
     loop {
         let buttons = Buttons::read();
@@ -324,15 +323,11 @@ fn game_over(score: u32) -> bool {
 fn level_finish(level: u16, score: u32) -> bool {
     let display = Display::open();
     display.clear(Color::red());
-    display.print(30, 0, b"Rkanoid\0", Color::white(), Color::red());
-    let mut level_str = [0u8; 32];
-    write!(FmtBuffer::new(&mut level_str), "Lvl {} done!\0", level + 1).unwrap();
-    display.print(0, 25, &level_str, Color::white(), Color::red());
-    let mut score_str = [0u8; 32];
-    write!(FmtBuffer::new(&mut score_str), "Score {}\0", score).unwrap();
-    display.print(0, 60, &score_str, Color::white(), Color::red());
-    display.print(0, 0, b"Q\0", Color::yellow(), Color::blue());
-    display.print(Display::W - Display::FONT_W, Display::H - 2 * Display::FONT_H, b"S\0", Color::yellow(), Color::blue());
+    display!(display, 30, 0, Color::white(), Color::red(), "Rkanoid");
+    display!(display, 0, 25, Color::white(), Color::red(), "Lvl {} done!", level + 1);
+    display!(display, 20, 60, Color::white(), Color::red(), "Score {}", score);
+    display!(display, 0, 60, Color::yellow(), Color::blue(), "Q");
+    display!(display, Display::W - Display::FONT_W, Display::H - 2 * Display::FONT_H, Color::yellow(), Color::blue(), "S");
     display.update();
     loop {
         let buttons = Buttons::read();
@@ -347,6 +342,7 @@ fn level_finish(level: u16, score: u32) -> bool {
 
 main!(main);
 fn main() {
+    card10_alloc::init(128 * 1024);
     title_screen();
     
     let mut quit = false;

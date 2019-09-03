@@ -215,6 +215,7 @@ dependencies = [
 name = "l0dable-rkanoid"
 version = "0.0.0"
 dependencies = [
+ "card10-alloc 0.1.0",
  "card10-l0dable 0.1.1",
  "cc 1.0.37 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
