@@ -149,7 +149,3 @@ extension (e.g `example` must be renamed as `example.elf`).
    ```
 
 4) Rebuild your app :)
-
-## TODO
-
-- [ ] alloc

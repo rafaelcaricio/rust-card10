@@ -1,6 +1,7 @@
 [workspace]
 members = [
   "card10-sys",
+  "card10-alloc",
   "card10-l0dable",
   "example",
   "rkanoid",

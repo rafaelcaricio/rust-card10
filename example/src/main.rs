@@ -1,11 +1,16 @@
 #![no_std]
 #![no_main]
 
-use card10_l0dable::*;
 use core::fmt::{self, Write};
+use card10_l0dable::*;
+/// Allows you to `use alloc::*;`
+extern crate alloc;
 
 main!(main);
 fn main() {
+    let heap_size = card10_alloc::init(4096);
+    println!("Heap size: {}", heap_size);
+
     let result = run();
     if let Err(error) = result {
         writeln!(UART, "error: {}\r", error).unwrap();
