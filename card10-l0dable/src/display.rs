@@ -49,7 +49,7 @@ impl Color {
     }
 
     pub fn g8(&self) -> u8 {
-        self.r() << 2
+        self.g() << 2
     }
 
     pub fn b(&self) -> u8 {
@@ -57,7 +57,7 @@ impl Color {
     }
 
     pub fn b8(&self) -> u8 {
-        self.r() << 3
+        self.b() << 3
     }
 }
 
