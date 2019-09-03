@@ -169,3 +169,20 @@ impl Drop for Display {
         }
     }
 }
+
+/// Requires `card10_alloc::init()` and `extern crate alloc;`
+#[macro_export]
+macro_rules! display {
+    ($disp: expr, $x: expr, $y: expr, $fg: expr, $bg: expr,
+     $fmt: expr) => ({
+         use alloc::format;
+         let s = format!(concat!($fmt, "\0"));
+         $disp.print($x, $y, s.as_bytes(), $fg, $bg);
+    });
+    ($disp: expr, $x: expr, $y: expr, $fg: expr, $bg: expr,
+     $fmt: expr, $($arg: tt)*) => ({
+         use alloc::format;
+         let s = format!(concat!($fmt, "\0"), $($arg)*);
+         $disp.print($x, $y, s.as_bytes(), $fg, $bg);
+    });
+}

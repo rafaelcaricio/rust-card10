@@ -47,25 +47,25 @@ fn run() -> Result<(), Error> {
         }
 
         display.clear(Color::yellow());
-        display.print(160 - t, 10, b"Hello Rust\0", Color::white(), Color::black());
+        display!(display, 160 - t, 10, Color::white(), Color::black(), "Hello Rust {}", t);
 
         let b = Buttons::read();
         if b.left_bottom() {
-            display.print(0, 60, b"LB\0", Color::red(), Color::black());
+            display!(display, 0, 60, Color::red(), Color::black(), "LB");
             vibra::set(true);
         }
         if b.right_bottom() {
-            display.print(80, 60, b"RB\0", Color::red(), Color::black());
+            display!(display, 80, 60, Color::red(), Color::black(), "RB");
             vibra::set(false);
         }
         if b.left_top() {
-            display.print(0, 10, b"LT\0", Color::red(), Color::black());
+            display!(display, 0, 10, Color::red(), Color::black(), "LT");
         }
         if b.right_top() {
-            display.print(80, 10, b"RT\0", Color::red(), Color::black());
+            display!(display, 80, 10, Color::red(), Color::black(), "RT");
         }
         if b.right_top() {
-            display.print(80, 30, b"Reset\0", Color::red(), Color::black());
+            display!(display, 80, 30, Color::red(), Color::black(), "Reset");
         }
         writeln!(UART, "Light: {:?}\r", light.get())?;
 
