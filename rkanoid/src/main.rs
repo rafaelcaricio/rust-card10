@@ -208,12 +208,12 @@ fn game(level: u16, mut score: u32) -> GameResult {
                 (ball_direction.is_right() && ball_x >= Display::W - BALL_RADIUS) {
                     // Bounce on left/right border
                     ball_direction.bounce(Bounce::Vertical);
-                    vibra::vibrate(10);
+                    vibra::vibrate(5);
             }
             if ball_direction.is_up() && ball_y <= BALL_RADIUS {
                 // Bounce on top border
                 ball_direction.bounce(Bounce::Horizontal);
-                vibra::vibrate(10);
+                vibra::vibrate(5);
             }
             if ball_direction.is_down() &&
                 ball_y >= Display::H - PADDLE_HEIGHT - BALL_RADIUS &&
@@ -222,13 +222,13 @@ fn game(level: u16, mut score: u32) -> GameResult {
                     // Bounce on paddle
                     if paddle < old_paddle {
                         ball_direction = Direction::UL;
-                        vibra::vibrate(50);
+                        vibra::vibrate(20);
                     } else if paddle > old_paddle {
                         ball_direction = Direction::UR;
-                        vibra::vibrate(50);
+                        vibra::vibrate(20);
                     } else {
                         ball_direction.bounce(Bounce::Horizontal);
-                        vibra::vibrate(20);
+                        vibra::vibrate(10);
                     }
                 }
             if ball_y >= Display::H - BALL_RADIUS {
@@ -240,7 +240,7 @@ fn game(level: u16, mut score: u32) -> GameResult {
                     score += 3;
                     // paddle_size += 2;
                     check_finish = true;
-                    vibra::vibrate(60);
+                    vibra::vibrate(15);
                 }
             if blocks.collides(ball_x, ball_y - BALL_RADIUS) ||
                 blocks.collides(ball_x, ball_y + BALL_RADIUS) {
@@ -248,7 +248,7 @@ fn game(level: u16, mut score: u32) -> GameResult {
                     score += 2;
                     // paddle_size += 1;
                     check_finish = true;
-                    vibra::vibrate(40);
+                    vibra::vibrate(15);
                 }
         }
         if check_finish && blocks.is_finished() {
