@@ -292,10 +292,10 @@ fn game(level: u16, mut score: u32) -> GameResult {
 fn title_screen() {
     let display = Display::open();
     display.clear(Color::red());
-    display!(display, 30, 15, Color::white(), Color::red(), "Rkanoid");
-    display!(display, 30, 30, Color::white(), Color::red(), "in Rust");
-    display!(display, 20, 45, Color::white(), Color::red(), "by Astro");
-    display!(display, Display::W - 2 * Display::FONT_W, Display::H - Display::FONT_H, Color::yellow(), Color::blue(), "Go");
+    display_adv!(display, Font24, Display::W / 2 - 60, 14, Color::white(), Color::red(), "Rkanoid");
+    display_adv!(display, Font20, Display::W / 2 - 49, 40, Color::white(), Color::red(), "in Rust");
+    display_adv!(display, Font16, Display::W / 2 - 44, 64, Color::white(), Color::red(), "by Astro");
+    display!(display, Display::W - 2 * Display::FONT_W, Display::H - Display::FONT_H + 3, Color::yellow(), Color::blue(), "Go");
     display.update();
     while !Buttons::read().right_bottom() {}
 }

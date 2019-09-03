@@ -75,6 +75,15 @@ pub enum FillStyle {
 
 pub struct Display;
 
+#[repr(u8)]
+pub enum Font {
+    Font8 = disp_font_name_DISP_FONT8 as u8,
+    Font12 = disp_font_name_DISP_FONT12 as u8,
+    Font16 = disp_font_name_DISP_FONT16 as u8,
+    Font20 = disp_font_name_DISP_FONT20 as u8,
+    Font24 = disp_font_name_DISP_FONT24 as u8,
+}
+
 impl Display {
     pub const W: u16 = 160;
     pub const H: u16 = 80;
@@ -104,6 +113,13 @@ impl Display {
     pub fn print(&self, x: u16, y: u16, s: &[u8], fg: Color, bg: Color) {
         unsafe {
             epic_disp_print(x, y, s.as_ptr(), fg.0, bg.0);
+        }
+    }
+
+    /// s must be 0-terminated
+    pub fn print_adv(&self, font: Font, x: u16, y: u16, s: &[u8], fg: Color, bg: Color) {
+        unsafe {
+            epic_disp_print_adv(font as u8, x, y, s.as_ptr(), fg.0, bg.0);
         }
     }
 
@@ -184,5 +200,23 @@ macro_rules! display {
          use alloc::format;
          let s = format!(concat!($fmt, "\0"), $($arg)*);
          $disp.print($x, $y, s.as_bytes(), $fg, $bg);
+    });
+}
+
+/// Requires `card10_alloc::init()` and `extern crate alloc;`
+#[macro_export]
+macro_rules! display_adv {
+    ($disp: expr, $font: tt, $x: expr, $y: expr, $fg: expr, $bg: expr,
+     $fmt: expr) => ({
+         use alloc::format;
+         use card10_l0dable::Font;
+         let s = format!(concat!($fmt, "\0"));
+         $disp.print_adv(Font::$font, $x, $y, s.as_bytes(), $fg, $bg);
+    });
+    ($disp: expr, $font: tt, $x: expr, $y: expr, $fg: expr, $bg: expr,
+     $fmt: expr, $($arg: tt)*) => ({
+         use alloc::format;
+         let s = format!(concat!($fmt, "\0"), $($arg)*);
+         $disp.print_adv(Font::$font, $x, $y, s.as_bytes(), $fg, $bg);
     });
 }

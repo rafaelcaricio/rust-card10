@@ -3,7 +3,7 @@
 mod os;
 pub use os::*;
 mod display;
-pub use display::{Color, Display, FillStyle, LineStyle};
+pub use display::{Color, Display, Font, FillStyle, LineStyle};
 mod buttons;
 pub mod framebuffer;
 pub use buttons::Buttons;
