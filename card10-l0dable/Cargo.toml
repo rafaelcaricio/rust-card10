@@ -2,7 +2,17 @@
 edition = "2018"
 name = "card10-l0dable"
 version = "0.1.1"
-authors = ["Astro <astro@spaceboyz.net>", "Kloenk <me@kloenk.de>"]
+authors = [
+    "Astro <astro@spaceboyz.net>",
+    "Kloenk <me@kloenk.de>",
+    "Bruno Kirschner <bruno.kirschner@online.de>",
+    "Puzzlewolf <camp@nora.pink>",
+    "Raphael Nestler <raphael.nestler@gmail.com>",
+    "Danilo Bargen <mail@dbrgn.ch>",
+    "toon <toon@c3d2.de>",
+    "Sergey Pepyakin <sergei@parity.io>",
+
+]
 license = "MIT/Apache-2.0"
 repository = "https://git.card10.badge.events.ccc.de/astro/rust-card10"
 homepage = "https://git.card10.badge.events.ccc.de/astro/rust-card10"
@@ -16,6 +26,9 @@ keywords = [
 categories = ["no-std"]
 description = "make l0dables for the Card10 (CCCamp 2019) badge"
 
+[package.metadata.docs.rs]
+default-target = "thumbv7em-none-eabi"
+
 [dependencies]
-card10-sys = { path = "../card10-sys", version = "^0.1" }
+card10-sys = { path = "../card10-sys", version = "1.9.*" }
 

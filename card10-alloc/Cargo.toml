@@ -19,6 +19,9 @@ keywords = [
     "l0dable",
 ]
 
+[package.metadata.docs.rs]
+default-target = "thumbv7em-none-eabi"
+
 [dependencies]
 alloc-cortex-m = "0.3"
 card10-sys = { path = "../card10-sys" }

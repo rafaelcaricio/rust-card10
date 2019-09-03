@@ -1,3 +1,5 @@
+//! This gets linked with the client C code for the card10 EPIC API.
+
 #![no_std]
 #![feature(global_asm)]
 #![allow(non_camel_case_types)]
@@ -9,6 +11,7 @@ use panic_abort as _;
 global_asm!(include_str!(concat!(env!("OUT_DIR"), "/crt.s")));
 include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
+/// Initialization for l0dables
 #[link_section = ".text.boot"]
 #[no_mangle]
 pub unsafe extern "C" fn Reset_Handler() -> ! {

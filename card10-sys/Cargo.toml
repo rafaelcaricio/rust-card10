@@ -1,8 +1,18 @@
 [package]
 
 name = "card10-sys"
-version = "0.1.0"
-authors = ["Astro <astro@spaceboyz.net>", "Kloenk <me@kloenk.de>"]
+version = "1.9.0"
+authors = [
+    "Astro <astro@spaceboyz.net>",
+    "Kloenk <me@kloenk.de>",
+    "Bruno Kirschner <bruno.kirschner@online.de>",
+    "Puzzlewolf <camp@nora.pink>",
+    "Raphael Nestler <raphael.nestler@gmail.com>",
+    "Danilo Bargen <mail@dbrgn.ch>",
+    "toon <toon@c3d2.de>",
+    "Sergey Pepyakin <sergei@parity.io>",
+
+]
 license = "MIT/Apache-2.0"
 edition = "2018"
 
@@ -18,6 +28,9 @@ keywords = [
     "card10",
     "l0dable",
 ]
+
+[package.metadata.docs.rs]
+default-target = "thumbv7em-none-eabi"
 
 [dependencies]
 panic-abort = "^0.3"
