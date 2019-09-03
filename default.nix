@@ -25,7 +25,7 @@ let
     name = "rust-card10";
     version = "0.0.0";
     src = ./.;
-    cargoSha256 = "10nims5j9r0d7pcfbbj8ycqxhcx7n07958jvkib29b0sf9c6qh3z";
+    cargoSha256 = "0cin9wj8nxflrpizxzx9qfgg7wy67nb5c1l6zz4zhcvbgqxqdi48";
     buildInputs = [ pkgsCross.arm-embedded.stdenv.cc ];
     prePatch = ''
       cp ${epic-stubs}/client.c card10-sys/vendor/
