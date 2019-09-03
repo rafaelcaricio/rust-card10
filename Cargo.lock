@@ -96,7 +96,7 @@ dependencies = [
 
 [[package]]
 name = "card10-l0dable"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "card10-sys 1.9.0",
 ]
@@ -207,7 +207,7 @@ name = "l0dable-example"
 version = "0.0.0"
 dependencies = [
  "card10-alloc 0.1.0",
- "card10-l0dable 0.1.1",
+ "card10-l0dable 0.2.0",
  "cc 1.0.37 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -216,7 +216,7 @@ name = "l0dable-rkanoid"
 version = "0.0.0"
 dependencies = [
  "card10-alloc 0.1.0",
- "card10-l0dable 0.1.1",
+ "card10-l0dable 0.2.0",
  "cc 1.0.37 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
