@@ -42,18 +42,18 @@ impl Blocks {
         result
     }
 
-    pub fn collides(&mut self, x: u16, y: u16) -> bool {
+    pub fn collides(&mut self, x: u16, y: u16) -> Option<Color> {
         let col = (x / BLOCK_W) as usize;
         let line = (y / BLOCK_H) as usize;
         if line >= BLOCKS_Y.into() || col >= BLOCKS_X.into() {
-            return false;
+            return None;
         }
         match self.blocks[line][col] {
-            Some(_) => {
+            Some(color) => {
                 self.blocks[line][col] = None;
-                true
+                Some(color)
             }
-            None => false,
+            None => None,
         }
     }
 
@@ -168,6 +168,7 @@ fn game(level: u16, mut score: u32) -> GameResult {
     let display = Display::open();
     let accel = BHI160::<Accelerometer>::start().unwrap();
     let mut accel_x = 0;
+    let mut leds = [LEDColor::RGB(0, 0, 0); 6];
 
     let mut paddle = Display::W / 2;
     let paddle_size = 18 - (2 * level).min(14);
@@ -235,21 +236,25 @@ fn game(level: u16, mut score: u32) -> GameResult {
             if ball_y >= Display::H - BALL_RADIUS {
                 return GameResult::Over(score);
             }
-            if blocks.collides(ball_x - BALL_RADIUS, ball_y) ||
-                blocks.collides(ball_x + BALL_RADIUS, ball_y) {
+            let collision_v = blocks.collides(ball_x - BALL_RADIUS, ball_y)
+                .or_else(|| blocks.collides(ball_x + BALL_RADIUS, ball_y));
+            if let Some(color) = collision_v {
                     ball_direction.bounce(Bounce::Vertical);
                     score += 3;
                     // paddle_size += 2;
                     check_finish = true;
                     vibra::vibrate(15);
+                    leds[0] = LEDColor::RGB(color.r8(), color.g8(), color.b8());
                 }
-            if blocks.collides(ball_x, ball_y - BALL_RADIUS) ||
-                blocks.collides(ball_x, ball_y + BALL_RADIUS) {
+            let collision_h = blocks.collides(ball_x, ball_y - BALL_RADIUS)
+                .or_else(|| blocks.collides(ball_x, ball_y + BALL_RADIUS));
+            if let Some(color) = collision_h {
                     ball_direction.bounce(Bounce::Horizontal);
                     score += 2;
                     // paddle_size += 1;
                     check_finish = true;
                     vibra::vibrate(15);
+                    leds[0] = LEDColor::RGB(color.r8(), color.g8(), color.b8());
                 }
         }
         if check_finish && blocks.is_finished() {
@@ -285,6 +290,18 @@ fn game(level: u16, mut score: u32) -> GameResult {
             }
         }
         display.update();
+
+        update_rgb_leds(|index| {
+            if index < 6 {
+                leds[(5 - index) as usize]
+            } else {
+                leds[(index - 5) as usize]
+            }
+        });
+        for i in 1..leds.len() {
+            leds[leds.len() - i] = leds[leds.len() - i - 1];
+        }
+        leds[0] = LEDColor::RGB(0, 0, 0);
     }
     unreachable!()
 }
@@ -349,7 +366,9 @@ fn main() {
     let mut level = 0;
     let mut score = 0;
     while !quit {
-        match game(level, score) {
+        let game_result = game(level, score);
+        update_rgb_leds(|_| LEDColor::RGB(0, 0, 0));
+        match game_result {
             GameResult::LevelFinish(new_score) => {
                 let again = level_finish(level, new_score);
                 quit = !again;
