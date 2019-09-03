@@ -1,9 +1,11 @@
 [workspace]
 members = [
-  "l0dable",
+  "card10-sys",
+  "card10-l0dable",
   "example",
   "rkanoid",
 ]
+
 default-members = [
   "example",
   "rkanoid",

@@ -4,7 +4,7 @@ use core::{
     mem::MaybeUninit,
 };
 
-use crate::{bindings::*, errno};
+use card10_sys::*;
 
 pub trait SensorType {
     /// sensor_type in C, sensor_id in Python

@@ -1,4 +1,4 @@
-use super::bindings::*;
+use card10_sys::*;
 
 pub struct Buttons {
     state: u32,
@@ -6,12 +6,11 @@ pub struct Buttons {
 
 impl Buttons {
     pub fn read() -> Self {
-        let mask =
-            epic_button_BUTTON_LEFT_BOTTOM |
-            epic_button_BUTTON_RIGHT_BOTTOM |
-            epic_button_BUTTON_LEFT_TOP |
-            epic_button_BUTTON_RIGHT_TOP |
-            epic_button_BUTTON_RESET;
+        let mask = epic_button_BUTTON_LEFT_BOTTOM
+            | epic_button_BUTTON_RIGHT_BOTTOM
+            | epic_button_BUTTON_LEFT_TOP
+            | epic_button_BUTTON_RIGHT_TOP
+            | epic_button_BUTTON_RESET;
         let state = unsafe { epic_buttons_read(mask as u8) }.into();
         Buttons { state }
     }

@@ -8,7 +8,7 @@ let
     src = ./.;
     phases = [ "unpackPhase" "patchPhase" "installPhase" ];
     nativeBuildInputs = [ git ];
-    prePatch = "cd c";
+    prePatch = "cd card10-sys/firmware";
     postPatch = ''
       VERSION="$(git describe --always)"
       GITHASH="$(git rev-parse HEAD)"

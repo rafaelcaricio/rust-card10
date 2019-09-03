@@ -1,23 +1,13 @@
 #![no_std]
 #![feature(global_asm)]
+#![allow(non_camel_case_types)]
+#![allow(non_upper_case_globals)]
+#![allow(non_snake_case)]
 
 use panic_abort as _;
 
-global_asm!(include_str!("crt.s"));
-
-/// Type check the user-supplied entry function.
-#[macro_export]
-macro_rules! main {
-    ($path:path) => {
-        #[export_name = "main"]
-        pub unsafe fn __main() {
-            // type check the given path
-            let f: fn() = $path;
-
-            f()
-        }
-    };
-}
+global_asm!(include_str!(concat!(env!("OUT_DIR"), "/crt.s")));
+include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 #[link_section = ".text.boot"]
 #[no_mangle]
@@ -38,12 +28,12 @@ pub unsafe extern "C" fn Reset_Handler() -> ! {
     }
 
     main();
-    exit(0);
+
+    epic_exit(0);
+    unreachable!()
 }
 
 pub mod ctypes {
-    #![allow(non_camel_case_types)]
-
     pub type c_short = i16;
     pub type c_ushort = u16;
     pub type c_int = i32;
@@ -59,7 +49,6 @@ pub mod ctypes {
 }
 
 pub mod errno {
-    #![allow(non_snake_case)]
     use crate::ctypes::c_int;
 
     pub const EPERM: c_int = 1; // Operation not permitted
@@ -101,37 +90,3 @@ pub mod errno {
     pub const ETIMEDOUT: c_int = 110; //Connection timed out
     pub const EINPROGRESS: c_int = 115; //Operation now in progress
 }
-
-pub mod bindings {
-    #![allow(non_upper_case_globals)]
-    #![allow(non_camel_case_types)]
-    #![allow(non_snake_case)]
-
-    include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
-}
-
-mod os;
-pub use os::*;
-mod display;
-pub use display::{Display, Color, LineStyle, FillStyle};
-pub mod framebuffer;
-mod buttons;
-pub use buttons::Buttons;
-pub mod uart;
-pub const UART: uart::Uart = uart::Uart;
-mod light_sensor;
-pub use light_sensor::LightSensor;
-pub mod vibra;
-pub mod trng;
-mod rtc;
-pub use rtc::{Seconds, MilliSeconds, Time};
-mod fmt_buffer;
-pub use fmt_buffer::{FmtBuffer, str_to_cstr};
-mod bme680;
-pub use bme680::BME680;
-mod bhi160;
-pub use bhi160::{
-    Accelerometer, Error as BHI160Error, Gyroscope, Orientation, Sensor as BHI160,
-    SensorData as BHI160Data,
-};
-pub mod fs;

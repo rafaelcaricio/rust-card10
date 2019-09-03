@@ -1,4 +1,4 @@
-use super::bindings::*;
+use card10_sys::*;
 
 pub struct LightSensor {
     // Prevent creation of this struct by all but this module.
@@ -25,6 +25,8 @@ impl LightSensor {
 
 impl Drop for LightSensor {
     fn drop(&mut self) {
-        unsafe { epic_light_sensor_stop(); }
+        unsafe {
+            epic_light_sensor_stop();
+        }
     }
 }

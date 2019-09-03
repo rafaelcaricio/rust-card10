@@ -51,7 +51,7 @@ https://firmware.card10.badge.events.ccc.de/how-to-build.html this
 should work as following:
 
 ```shell
-cd c/
+cd card10-sys/firmware
 ./bootstrap -Djailbreak_card10=true
 ninja -C build/
 ```
@@ -61,9 +61,62 @@ And then copy `build/pycardium/pycardium_epicardium.bin` as
 
 ## Build and run Rust loadables
 
+### Setup
+
+If you want to come up with your own rust based loadable crate a few
+preparations are required:
+
+  - Setup the new crate repository.
+ 
+  - Add `card10-l0dable = "^0.1"` as a dependency to your new crate.
+ 
+  - Change the configuration of the default cargo release profile inside your
+    `Cargo.toml` file:
+ 
+    ```
+    [profile.release]
+    opt-level = "s"
+    panic = "abort"
+    ```
+
+  - Create (or update) the `thumbv7em-none-eabi` target configuration at
+    `$PROJECT/.cargo/config` with the following rustflags:
+ 
+    ```
+    [target.thumbv7em-none-eabi]
+    rustflags = [
+      "-C", "linker=arm-none-eabi-gcc",
+      "-C", "link-args=-Tl0dable.ld -n -pie -fPIC",
+      "-C", "relocation-model=pic",
+    ]
+
+    [build]
+    target = "thumbv7em-none-eabi"
+    ```
+
+  - Ensure that your crate is marked as a `non_std` project and make
+    `card10-l0dable` aware of your custom main function. This should require
+    the following update to your `main.rs` file.
+
+    ```main.rs
+    #![no_std]
+    #![no_main]
+
+    use card10_l0dable::main;
+
+    main!(main);
+    fn main() {}
+    ```
+
+### Compilation
+
+To compile the project use the nightly toolchain and define the proper target.
+
 ```shell
 cargo +nightly build --release --target thumbv7em-none-eabi
 ```
+
+### Transfer to card10
 
 Then copy the resulting executable from the target directory 
 `target/thumbv7em-none-eabi/release/example` into the
@@ -74,25 +127,25 @@ extension (e.g `example` must be renamed as `example.elf`).
 
 ## Crates
 
-| Crate    | Description                                               |
-| ----     | ---                                                       |
-| l0dable  | Helper crate for building l0dables                        |
-| example  | l0dable example                                           |
-| rkanoid  | Arkanoid clone                                            |
+| Crate           | Description                                               |
+| ----            | ---                                                       |
+| card10-l0dable  | Helper crate for building l0dables                        |
+| example         | l0dable example                                           |
+| rkanoid         | Arkanoid clone                                            |
 
 
 ## Misc
 
 ### How to update the firmware bindings
 
-1) Update the `c/` submodule to the latest firmware state.
+1) Update the `card10-sys/firmware` submodule to the latest firmware state.
 
 2) Rebuild the firmware as described above.
 
 3) Run the following script from the project root directory
 
    ```shell
-   python c/epicardium/api/genapi.py -H c/epicardium/epicardium.h -c l0dable/src/client.c -s l0dable/src/server.c
+   python card10-sys/firmware/epicardium/api/genapi.py -H card10-sys/firmware/epicardium/epicardium.h -c card10-sys/vendor/client.c -s card10-sys/vendor/server.c
    ```
 
 4) Rebuild your app :)

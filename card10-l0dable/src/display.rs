@@ -1,5 +1,5 @@
-use super::bindings::*;
 use super::framebuffer::FrameBuffer;
+use card10_sys::*;
 
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
@@ -32,9 +32,7 @@ impl Color {
 
     pub fn rgb8(r8: u8, g8: u8, b8: u8) -> Self {
         let c =
-            ((u16::from(r8) & 0xF8) << 8) |
-            ((u16::from(g8) & 0xFA) << 3) |
-            (u16::from(b8) & 0xF8);
+            ((u16::from(r8) & 0xF8) << 8) | ((u16::from(g8) & 0xFA) << 3) | (u16::from(b8) & 0xF8);
         Color(c)
     }
 
@@ -84,16 +82,22 @@ impl Display {
     pub const FONT_H: u16 = 20;
 
     pub fn open() -> Self {
-        unsafe { epic_disp_open(); }
+        unsafe {
+            epic_disp_open();
+        }
         Display
     }
 
     pub fn update(&self) {
-        unsafe { epic_disp_update(); }
+        unsafe {
+            epic_disp_update();
+        }
     }
 
     pub fn clear(&self, color: Color) {
-        unsafe { epic_disp_clear(color.0); }
+        unsafe {
+            epic_disp_clear(color.0);
+        }
     }
 
     /// s must be 0-terminated
@@ -109,19 +113,45 @@ impl Display {
         }
     }
 
-    pub fn line(&self, x1: u16, y1: u16, x2: u16, y2: u16, color: Color, linestyle: LineStyle, pixelsize: u16) {
+    pub fn line(
+        &self,
+        x1: u16,
+        y1: u16,
+        x2: u16,
+        y2: u16,
+        color: Color,
+        linestyle: LineStyle,
+        pixelsize: u16,
+    ) {
         unsafe {
             epic_disp_line(x1, y1, x2, y2, color.0, linestyle as u32, pixelsize);
         }
     }
 
-    pub fn rect(&self, x1: u16, y1: u16, x2: u16, y2: u16, color: Color, fillstyle: FillStyle, pixelsize: u16) {
+    pub fn rect(
+        &self,
+        x1: u16,
+        y1: u16,
+        x2: u16,
+        y2: u16,
+        color: Color,
+        fillstyle: FillStyle,
+        pixelsize: u16,
+    ) {
         unsafe {
             epic_disp_rect(x1, y1, x2, y2, color.0, fillstyle as u32, pixelsize);
         }
     }
 
-    pub fn circ(&self, x: u16, y: u16, rad: u16, color: Color, fillstyle: FillStyle, pixelsize: u16) {
+    pub fn circ(
+        &self,
+        x: u16,
+        y: u16,
+        rad: u16,
+        color: Color,
+        fillstyle: FillStyle,
+        pixelsize: u16,
+    ) {
         unsafe {
             epic_disp_circ(x, y, rad, color.0, fillstyle as u32, pixelsize);
         }
@@ -134,6 +164,8 @@ impl Display {
 
 impl Drop for Display {
     fn drop(&mut self) {
-        unsafe { epic_disp_close(); }
+        unsafe {
+            epic_disp_close();
+        }
     }
 }
