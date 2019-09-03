@@ -3,6 +3,10 @@ use card10_sys::*;
 use core::mem::{transmute, uninitialized};
 use core::ops::{Index, IndexMut};
 
+use embedded_graphics::pixelcolor::Rgb565;
+use embedded_graphics::prelude::Pixel;
+use embedded_graphics::Drawing;
+
 mod font;
 pub use font::*;
 mod text;
@@ -68,6 +72,23 @@ impl<'d> IndexMut<(u16, u16)> for FrameBuffer<'d> {
         let x = usize::from(Display::W - 1 - x);
         let y = usize::from(Display::H - 1 - y);
         unsafe { transmute(&mut self.buffer.fb[y][x]) }
+    }
+}
+
+impl<'d> Drawing<Rgb565> for FrameBuffer<'d> {
+    fn draw<T>(&mut self, item: T)
+    where
+        T: IntoIterator<Item = Pixel<Rgb565>>,
+    {
+        for Pixel(coord, color) in item {
+            let x = coord[0] as u16;
+            let y = coord[1] as u16;
+
+            if x >= Display::W || y >= Display::H {
+                continue;
+            }
+            self[(x, y)] = RawColor::rgb8(color.r(), color.g(), color.b());
+        }
     }
 }
 

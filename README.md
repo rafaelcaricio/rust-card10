@@ -134,6 +134,7 @@ extension (e.g `example` must be renamed as `example.elf`).
 | card10-l0dable  | High-level crate for building l0dables                    |
 | example         | l0dable example                                           |
 | rkanoid         | Arkanoid clone                                            |
+| draw-image      | Example of drawing a static image to the display          |
 
 
 ## Misc

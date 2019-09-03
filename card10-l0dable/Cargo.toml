@@ -18,4 +18,5 @@ description = "make l0dables for the Card10 (CCCamp 2019) badge"
 
 [dependencies]
 card10-sys = { path = "../card10-sys", version = "^0.1" }
+embedded-graphics = "0.5.2"
 

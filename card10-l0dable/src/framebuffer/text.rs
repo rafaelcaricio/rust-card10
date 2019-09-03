@@ -1,6 +1,6 @@
+use super::{Font, FrameBuffer, RawColor};
+use crate::Display;
 use core::fmt::Write;
-use super::{FrameBuffer, Font, RawColor};
-use crate::{Display};
 
 pub struct TextRenderer<'a, 'd, 'f> {
     pub framebuffer: &'a mut FrameBuffer<'d>,
