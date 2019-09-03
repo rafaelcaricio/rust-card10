@@ -12,6 +12,7 @@ pub trait SensorType {
     fn convert_single(value: i16) -> f32;
 }
 
+#[derive(Debug)]
 pub struct Accelerometer;
 impl SensorType for Accelerometer {
     fn sensor_type() -> u32 {
@@ -22,6 +23,7 @@ impl SensorType for Accelerometer {
     }
 }
 
+#[derive(Debug)]
 pub struct Gyroscope;
 impl SensorType for Gyroscope {
     fn sensor_type() -> u32 {
@@ -32,6 +34,7 @@ impl SensorType for Gyroscope {
     }
 }
 
+#[derive(Debug)]
 pub struct Orientation;
 impl SensorType for Orientation {
     fn sensor_type() -> u32 {
@@ -118,7 +121,7 @@ pub struct SensorData<S> {
 }
 
 impl<'a, S: SensorType> IntoIterator for &'a SensorData<S> {
-    type Item = SensorDataItem;
+    type Item = SensorDataItem<S>;
     type IntoIter = SensorDataIter<'a, S>;
 
     fn into_iter(self) -> Self::IntoIter {
@@ -132,7 +135,7 @@ pub struct SensorDataIter<'a, S> {
 }
 
 impl<'a, S: SensorType> Iterator for SensorDataIter<'a, S> {
-    type Item = SensorDataItem;
+    type Item = SensorDataItem<S>;
 
     fn next(&mut self) -> Option<Self::Item> {
         while self.pos < self.data.n {
@@ -142,11 +145,12 @@ impl<'a, S: SensorType> Iterator for SensorDataIter<'a, S> {
                 continue;
             }
 
-            let item = SensorDataItem {
-                x: S::convert_single(vec.x),
-                y: S::convert_single(vec.y),
-                z: S::convert_single(vec.z),
+            let item = SensorDataItem::<S> {
+                x_raw: vec.x,
+                y_raw: vec.y,
+                z_raw: vec.z,
                 status: vec.status,
+                _kind: PhantomData,
             };
 
             self.pos += 1;
@@ -159,11 +163,26 @@ impl<'a, S: SensorType> Iterator for SensorDataIter<'a, S> {
 }
 
 #[derive(Debug, Clone)]
-pub struct SensorDataItem {
-    pub x: f32,
-    pub y: f32,
-    pub z: f32,
+pub struct SensorDataItem<S: SensorType> {
+    pub x_raw: i16,
+    pub y_raw: i16,
+    pub z_raw: i16,
     pub status: u8,
+    _kind: PhantomData<S>,
+}
+
+impl<S: SensorType> SensorDataItem<S> {
+    pub fn get_x(&self) -> f32 {
+        S::convert_single(self.x_raw)
+    }
+
+    pub fn get_y(&self) -> f32 {
+        S::convert_single(self.y_raw)
+    }
+
+    pub fn get_z(&self) -> f32 {
+        S::convert_single(self.z_raw)
+    }
 }
 
 #[repr(C)]
