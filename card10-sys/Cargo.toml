@@ -6,7 +6,7 @@ authors = ["Astro <astro@spaceboyz.net>", "Kloenk <me@kloenk.de>"]
 license = "MIT/Apache-2.0"
 edition = "2018"
 
-description = "Rust bindings for card10"
+description = "Unsafe C bindings for card10 l0dables"
 repository = "https://git.card10.badge.events.ccc.de/astro/rust-card10"
 homepage = "https://git.card10.badge.events.ccc.de/astro/rust-card10"
 

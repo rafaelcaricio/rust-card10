@@ -129,7 +129,9 @@ extension (e.g `example` must be renamed as `example.elf`).
 
 | Crate           | Description                                               |
 | ----            | ---                                                       |
-| card10-l0dable  | Helper crate for building l0dables                        |
+| card10-sys      | Unsafe C bindings for l0dables                            |
+| card10-alloc    | alloc::* support for l0dables                             |
+| card10-l0dable  | High-level crate for building l0dables                    |
 | example         | l0dable example                                           |
 | rkanoid         | Arkanoid clone                                            |
 
