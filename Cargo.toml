@@ -5,11 +5,13 @@ members = [
   "card10-l0dable",
   "example",
   "rkanoid",
+  "draw-image",
 ]
 
 default-members = [
   "example",
   "rkanoid",
+  "draw-image",
 ]
 
 [profile.release]

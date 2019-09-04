@@ -1,0 +1,16 @@
+[package]
+name = "draw-image"
+version = "0.0.0"
+authors = ["Rafael Caricio <crates.rs@caric.io>"]
+edition = "2018"
+
+[dependencies]
+card10-l0dable = { path = "../card10-l0dable" }
+embedded-graphics = { version = "0.5.2" }
+
+[build-dependencies]
+cc = "1.0"
+
+[[bin]]
+name = "draw-image"
+path = "src/main.rs"

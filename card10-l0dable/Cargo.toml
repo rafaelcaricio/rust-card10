@@ -31,3 +31,4 @@ default-target = "thumbv7em-none-eabi"
 
 [dependencies]
 card10-sys = { path = "../card10-sys" }
+embedded-graphics = "0.5"
