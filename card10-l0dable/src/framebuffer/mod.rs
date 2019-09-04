@@ -81,14 +81,15 @@ impl<'d> Drawing<Rgb565> for FrameBuffer<'d> {
     where
         T: IntoIterator<Item = Pixel<Rgb565>>,
     {
-        for Pixel(coord, color) in item {
+        for Pixel(coord, Rgb565(color)) in item {
             let x = coord[0] as u16;
             let y = coord[1] as u16;
 
             if x >= Display::W || y >= Display::H {
                 continue;
             }
-            self[(x, y)] = RawColor::rgb8(color.r(), color.g(), color.b());
+            // Swap bytes
+            self[(x, y)] = RawColor([(color >> 8) as u8, color as u8]);
         }
     }
 }
