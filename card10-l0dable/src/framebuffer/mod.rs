@@ -75,6 +75,7 @@ impl<'d> IndexMut<(u16, u16)> for FrameBuffer<'d> {
     }
 }
 
+/// `embedded-graphics` support
 impl<'d> Drawing<Rgb565> for FrameBuffer<'d> {
     fn draw<T>(&mut self, item: T)
     where
@@ -92,6 +93,7 @@ impl<'d> Drawing<Rgb565> for FrameBuffer<'d> {
     }
 }
 
+/// RGB565 with swapped bytes
 #[derive(Debug, Clone, Copy)]
 #[repr(C)]
 pub struct RawColor([u8; 2]);
@@ -121,6 +123,7 @@ impl RawColor {
         Self::rgb8(0xff, 0xff, 0)
     }
 
+    /// Construct from 0..255-triple
     pub fn rgb8(r8: u8, g8: u8, b8: u8) -> Self {
         let b1 = (r8 & 0xF8) | (g8 >> 5);
         let b2 = ((g8 & 0xFA) << 3) | (b8 >> 3);
